@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-#HEADLESS display using xvfb. 
-#NOTE: This is only compatible with Linux/Mac
-#from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import TimeoutException
@@ -10,6 +7,8 @@ import globaldata
 import httplib
 import sys
 import base64
+import os
+
 try:
     import json
 except ImportError:
@@ -19,8 +18,13 @@ except ImportError:
 class BaseTestCase (unittest.TestCase):
 
     #HEADLESS
-    #global display
-    #display = Display(visible=0, size=(800, 600))   
+    #NOTE: display needs to be declared outside of set up in order to be
+    #accessed by getDriver method
+    global display
+    
+    if 'linux' in sys.platform:
+        from pyvirtualdisplay import Display
+        display = Display(visible=0, size=(800, 600)) 
       
     def setUp(self):        
         driver = BaseTestCase.getDriver(self)
@@ -28,9 +32,10 @@ class BaseTestCase (unittest.TestCase):
 
     def tearDown(self):
         self.driver.quit()
-        #HEADLESS
-        #if ('headless' in self.base_browser):
-        #    display.stop()
+        if 'linux' in sys.platform:
+            display.stop()
+            #Prevent any possible rouge processes
+            #os.system("killall -9 xvfb")   
         
         
     #def clearCache():
@@ -130,22 +135,11 @@ class BaseTestCase (unittest.TestCase):
                         }
             )    
         
-                   
-               
-        #HEADLESS     
-        #elif (self.base_browser == 'headless'):
-        #    display.start()
+                      
             
-        #    #FIREFOX NON LONG-POLLING
-        #    #self.driver = webdriver.Firefox()
-            
-        #    #FIREFOX LONG-POLLING
-        #    fp = webdriver.FirefoxProfile()           
-        #    fp.set_preference("webdriver.load.strategy", "unstable")
-        #    self.driver = webdriver.Firefox(firefox_profile=fp)
-
-            
-        elif (self.base_browser == 'firefox'): 
+        elif (self.base_browser == 'firefox'):
+            if 'linux' in sys.platform:
+                display.start()      
             
             #NON LONG-POLLING
             self.driver = webdriver.Firefox()
@@ -185,7 +179,10 @@ class BaseTestCase (unittest.TestCase):
             
             
         elif (self.base_browser == 'chrome'):
-            import os            
+            if 'linux' in sys.platform:
+                display.start()      
+
+           
             chromedriver = globaldata.CHROME_DRIVER_DIR
             os.environ["webdriver.chrome.driver"] = chromedriver 
             options = webdriver.ChromeOptions()
