@@ -12,6 +12,7 @@ EMAILPASS = os.environ['FP_QA_EMAIL_PASS']
 CHROME = 'chrome'
 FF = 'firefox'
 SAFARI = 'safari'
+PHANTOMJS = 'phantomjs'
 IE = 'ie11'
 IPHONE = 'iphone'
 IPAD = 'ipad'
@@ -26,7 +27,7 @@ SAUCE_IE11 = 'sauce_ie11'
 SAUCE_IPHONE = 'sauce_iphone'
 SAUCE_IPAD = 'sauce_ipad'
 BROWSER_LIST = [CHROME, FF, SAFARI, IE, IPHONE, IPAD, SAUCE_CHROME,
-                SAUCE_FIREFOX, SAUCE_IE11, SAUCE_IPHONE, SAUCE_IPAD]
+                SAUCE_FIREFOX, SAUCE_IE11, SAUCE_IPHONE, SAUCE_IPAD, PHANTOMJS]
 BROWSER_HELP = '''Browser to run tests on.  All options are listed in basetestcase.py,
 and include one of the following (no quotes): ''' + str(BROWSER_LIST)
 

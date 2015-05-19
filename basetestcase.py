@@ -22,9 +22,9 @@ class BaseTestCase (unittest.TestCase):
     #accessed by getDriver method
     global display
     
-    if 'linux' in sys.platform:
-        from pyvirtualdisplay import Display
-        display = Display(visible=0, size=(800, 600)) 
+    #if 'linux' in sys.platform:
+    #    from pyvirtualdisplay import Display
+    #    display = Display(visible=0, size=(800, 600)) 
       
     def setUp(self):        
         driver = BaseTestCase.getDriver(self)
@@ -32,8 +32,8 @@ class BaseTestCase (unittest.TestCase):
 
     def tearDown(self):
         self.driver.quit()
-        if 'linux' in sys.platform:
-            display.stop()
+        #if 'linux' in sys.platform:
+        #    display.stop()
             #Prevent any possible rouge processes
             #os.system("killall -9 xvfb")   
         
@@ -135,6 +135,9 @@ class BaseTestCase (unittest.TestCase):
                         }
             )    
         
+
+        elif (self.base_browser == 'phantomjs'):
+            driver = webdriver.PhantomJS(executable_path='/usr/bin/phantomjs-1.9.8-linux-x86_64/bin/phantomjs')
                       
             
         elif (self.base_browser == 'firefox'):
