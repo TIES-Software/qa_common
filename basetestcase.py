@@ -23,6 +23,7 @@ class BaseTestCase (unittest.TestCase):
     #accessed by getDriver method
     global display
     
+    #Declaration of display on mac 'darwin' platform throws error
     if 'linux' in sys.platform:
         from pyvirtualdisplay import Display
         display = Display(visible=0, size=(800, 600)) 
