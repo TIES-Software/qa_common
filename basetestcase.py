@@ -23,8 +23,12 @@ class BaseTestCase (unittest.TestCase):
     global display
     
     if 'linux' in sys.platform:
-        from pyvirtualdisplay import Display
-        display = Display(visible=0, size=(800, 600)) 
+        #from pyvirtualdisplay import Display
+        #display = Display(visible=0, size=(800, 600)) 
+        with pyvirtualdisplay.Display(visible=True):
+            if True:  # Set to False to use Chrome...
+                binary = FirefoxBinary()
+                driver = webdriver.Firefox(None, binary)        
       
     def setUp(self):        
         driver = BaseTestCase.getDriver(self)
@@ -32,8 +36,8 @@ class BaseTestCase (unittest.TestCase):
 
     def tearDown(self):
         self.driver.quit()
-        if 'linux' in sys.platform:
-            display.stop()
+        #if 'linux' in sys.platform:
+        #    display.stop()
             #Prevent any possible rouge processes
             #os.system("killall -9 xvfb")   
         
@@ -142,10 +146,11 @@ class BaseTestCase (unittest.TestCase):
             
         elif (self.base_browser == 'firefox'):
             if 'linux' in sys.platform:
-                display.start()      
-            
-            #NON LONG-POLLING
-            self.driver = webdriver.Firefox()
+                #display.start()  
+                print("Initiated firefox object in display context")
+            else:
+                #NON LONG-POLLING
+                self.driver = webdriver.Firefox()
                            
             #LONG-POLLING
             #fp = webdriver.FirefoxProfile()
