@@ -53,7 +53,7 @@ def build_validation_array(customer, conf_num):
 
 def login():
     mail = imaplib.IMAP4_SSL('imap.gmail.com')
-    mail.login(globaldata.FRONTENDUSER, globaldata.EMAILPASS)
+    mail.login(globaldata.FRONTENDLOGIN, globaldata.EMAILPASS)
     return mail
 
 
