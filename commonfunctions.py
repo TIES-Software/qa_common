@@ -30,6 +30,8 @@ ID_IFRAME = "iFrameId"
 
 #FUNCTIONS
 
+def get_current_date_formatted():
+    return time.strftime('%m/%d/%Y')
 
 
 def readystate_complete(self):
