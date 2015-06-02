@@ -59,7 +59,8 @@ def wait_for_url(self, url, **kwargs):
     found = True    
     first_time = time.time()
     last_time = first_time  
-    current_url = driver.current_url
+    #AB 6/1, refactored to try to eliminate false failures
+    current_url = ""#driver.current_url
 
     if 'timeout' in kwargs:
         timeout = kwargs['timeout']
@@ -67,7 +68,10 @@ def wait_for_url(self, url, **kwargs):
         timeout = globaldata.TIMEOUT
     
     while (url not in current_url):
-        current_url = driver.current_url
+        try:
+            current_url = driver.current_url
+        except Exception, e:
+            current_url = ""
         new_time = time.time()        
         if  new_time - last_time > timeout:
             found = False
@@ -82,10 +86,15 @@ def wait_for_element_populated(self, what, element):
     populated = True
     first_time = time.time()
     last_time = first_time
-    element_text = driver.find_element(by, element).text
+    #AB 6/2, refactored to prevent false failure with try catch
+    #and initializing to empty string
+    element_text = ""#driver.find_element(by, element).text
     while element_text == "": 
         new_time = time.time()
-        element_text = driver.find_element(by, element).text
+        try:
+            element_text = driver.find_element(by, element).text
+        except Exception, e:
+            element_text = ""
         if  new_time - last_time > timeout:
             populated = False
             break  
@@ -104,10 +113,15 @@ def wait_for_element_to_equal(self, what, element, value, **kwargs):
     equal = True
     first_time = time.time()
     last_time = first_time
-    element_text = driver.find_element(by, element).text
+    #AB 6/2, trying to eliminate possible false failure
+    element_text = ""
+    #element_text = driver.find_element(by, element).text
     while element_text != value: 
         new_time = time.time()
-        element_text = driver.find_element(by, element).text
+        try:
+            element_text = driver.find_element(by, element).text
+        except Exception, e:
+            element_text = ""
         if  new_time - last_time > timeout:
             equal = False
             break  
@@ -123,7 +137,8 @@ def wait_for_element(self, by, what, **kwargs):
     if 'timeout' in kwargs:
         timeout_param = kwargs['timeout'] 
     
-    self.driver.implicitly_wait(timeout_param)    
+    #AB 6/2, moved within non js conditional to eliminate a false failure
+    #self.driver.implicitly_wait(timeout_param)    
         
     if 'exec_js' in kwargs:
         script = ""
@@ -145,6 +160,7 @@ def wait_for_element(self, by, what, **kwargs):
                 driver.execute_script(script)
        
     else:
+        self.driver.implicitly_wait(timeout_param) 
         first_time = time.time()
         last_time = first_time   
         while check_if_element_present(self, by, what, 
@@ -318,12 +334,11 @@ def get_by(what):
         by = By.XPATH  
     return by
 
-
+#AB 6/2, changed to general exception
 def check_script(self, script):
     driver = self.driver
     try: driver.execute_script(script)
-    except WebDriverException, e: return False
-    #except: return False
+    except Exception, e: return False
     return True 
    
 def wait_for_script_runnable(self, script, **kwargs):
