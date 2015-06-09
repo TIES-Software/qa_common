@@ -30,6 +30,15 @@ ID_IFRAME = "iFrameId"
 
 #FUNCTIONS
 
+def get_unique_name():
+    d = datetime.datetime.now()
+    unique_name = str(d.strftime('%m'))
+    unique_name = unique_name + str(d.strftime('%d'))
+    unique_name = unique_name + str(d.year)
+    unique_name = unique_name + str(d.strftime('%H'))
+    unique_name = unique_name + str(d.strftime('%M'))
+    return unique_name
+
 def get_current_date_formatted():
     return time.strftime('%m/%d/%Y')
 

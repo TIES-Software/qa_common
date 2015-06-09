@@ -5,7 +5,7 @@ REPORT_DIR = os.getcwd() + "/reports/"
 SCREENSHOT_DIR = os.getcwd() + "/reports/screenshots/"
 CHROME_DRIVER_DIR = "/Users/Briel/qa/common/chromedriver"
 IE_DRIVER_DIR = "/Users/Briel/qa/common/IEDriverServer.exe"
-
+SELENIUM = "selenium"
 
 EMAILPASS = os.environ['FP_QA_EMAIL_PASS']
 
