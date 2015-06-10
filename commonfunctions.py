@@ -39,8 +39,39 @@ def get_unique_name():
     unique_name = unique_name + str(d.strftime('%M'))
     return unique_name
 
+
+def get_day_number(**kwargs):
+    if 'date' in kwargs:
+        day = kwargs['date'].split("/")[1].split("/")[0]
+    else:
+        day = datetime.datetime.today().day
+    return day
+
+
 def get_current_date_formatted():
     return time.strftime('%m/%d/%Y')
+
+
+def get_past_date(**kwargs):
+    return_date = datetime.datetime.now()
+    if 'days' in kwargs:
+        return_date = (datetime.datetime.now() + datetime.timedelta(-kwargs['days']))
+    #if 'months' in kwargs:
+    #    return_date = (return_date.replace(return_date.month - kwargs['months']))
+    if 'years' in kwargs:
+        return_date = (return_date.replace(return_date.year - kwargs['years']))
+    return return_date.strftime('%m/%d/%Y')
+
+
+def get_future_date(**kwargs):
+    return_date = datetime.datetime.now()
+    if 'days' in kwargs:
+        return_date = (datetime.datetime.now() + datetime.timedelta(+kwargs['days']))
+    #if 'months' in kwargs:
+    #    return_date = (return_date.replace(return_date.month - kwargs['months']))
+    if 'years' in kwargs:
+        return_date = (return_date.replace(return_date.year + kwargs['years']))
+    return return_date.strftime('%m/%d/%Y')
 
 
 def readystate_complete(self):
@@ -465,3 +496,46 @@ def verify_page_title(self, page, title, **kwargs):
     return [failed, failure]
 
 
+
+def get_element_number(self, element, text):
+    driver = self.driver
+    script = "elements = document.getElementsByClassName('" + element + "');"
+    script = script + "for (i=0;i<elements.length;i++){ "
+    script = script + "if (elements[i].textContent == '" + text + "') { return i; } }"
+    element_num = driver.execute_script(script)
+    return int(element_num)
+
+
+def set_date(self, page, **kwargs):
+    
+    CN_DAY = "day"
+    if page == globaldata.PAGE_ACTIVITIES:
+        ID_ENDDATE = "ctl00_ContentPlaceHolder1_ActivityEndDate"
+        
+    driver = self.driver
+    failed = False
+    failure = ""
+
+    #Default behavior is to set end date in future
+    if 'past' in kwargs:
+        month = 'prev'
+    else:
+        month = 'next'
+
+    if (wait_for_element(self, globaldata.ID, ID_ENDDATE, exec_js=True,
+                                        timeout=globaldata.TIMEOUTSHORT) == False):
+        failed = True
+        failure = failure + "End Date widget not found.\n"
+        print("FAILURE: End Date widget not found.")
+    else:
+        driver.find_element_by_id(ID_ENDDATE).click()
+        wait_for_element(self, globaldata.CN, month)
+        import pdb
+        pdb.set_trace()
+        driver.find_element_by_class_name(month).click()            
+        script = "obj = document.getElementsByClassName('day'); for (i=0;i<obj.length; i++) { " 
+        script = script + "if (obj[i].textContent == '1') { return i;  } }"              
+        el_num = driver.execute_script(script)
+        driver.find_elements_by_class_name(CN_DAY)[el_num].click()
+    
+    return [failed, failure]
