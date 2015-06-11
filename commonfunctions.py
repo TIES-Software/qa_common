@@ -530,8 +530,6 @@ def set_date(self, page, **kwargs):
     else:
         driver.find_element_by_id(ID_ENDDATE).click()
         wait_for_element(self, globaldata.CN, month)
-        import pdb
-        pdb.set_trace()
         driver.find_element_by_class_name(month).click()            
         script = "obj = document.getElementsByClassName('day'); for (i=0;i<obj.length; i++) { " 
         script = script + "if (obj[i].textContent == '1') { return i;  } }"              
@@ -539,3 +537,10 @@ def set_date(self, page, **kwargs):
         driver.find_elements_by_class_name(CN_DAY)[el_num].click()
     
     return [failed, failure]
+
+
+def wait_for_overlay(self):
+    driver = self.driver
+    script = "return document.getElementsByClassName('ui-widget-overlay').length"
+    if (poll_until(self, script, "0", globaldata.TIMEOUTSHORT) == False):
+        print("Script overlay never completed loading!")
