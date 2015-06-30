@@ -88,7 +88,6 @@ def close_alert(self):
     
         alert = driver.switch_to_alert()
         alert.accept()
-        print "Alert accepted."
     except TimeoutException:
         print "No alert."
 
