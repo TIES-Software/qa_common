@@ -110,10 +110,10 @@ def validate_email(mail, validations):
         mail.select("inbox")
         result, email_data = mail.search(None, "ALL")     
         ids = email_data[0]         
-        if  new_time - last_time > globaldata.TIMEOUT:
+        if  new_time - last_time > globaldata.TIMEOUTLONG:
             failed = True
-            failure = failure + "Email not received within " + str(globaldata.TIMEOUT) + " seconds.\n"
-            print("FAILURE: Email not received within " + str(globaldata.TIMEOUT) + " seconds.")
+            failure = failure + "Email not received within " + str(globaldata.TIMEOUTLONG) + " seconds.\n"
+            print("FAILURE: Email not received within " + str(globaldata.TIMEOUTLONG) + " seconds.")
             break    
     
     if not failed: 
