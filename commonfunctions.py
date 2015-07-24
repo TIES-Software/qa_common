@@ -277,13 +277,19 @@ def wait_for_link_and_click(self, by, what, link_text, **kwargs):
 
 
 
-def wait_for_element_not_present(self, by, what):
+def wait_for_element_not_present(self, by, what, **kwargs):
     first_time = time.time()
     last_time = first_time 
     not_present = True
-    while check_if_element_present(self, by, what) == True: 
+
+    if 'timeout' in kwargs:
+        timeout_ = kwargs['timeout']
+    else:
+        timeout_ = globaldata.TIMEOUTSHORT   
+    
+    while check_if_element_present(self, by, what, timeout=timeout_) == True: 
         new_time = time.time()
-        if  new_time - last_time > globaldata.TIMEOUT:
+        if  new_time - last_time > timeout_:
             not_present = False
     return not_present
 
