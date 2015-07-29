@@ -490,13 +490,13 @@ def verify_page_title(self, page, title, **kwargs):
     print("Verifying page title '" + title + "'...")
     script = 'return document.getElementsByTagName("' + TAG_HEADER
     script = script + '")[0].textContent.indexOf( "' + title + '")>-1'
-    passed = poll_until(self, script, "True", globaldata.TIMEOUTSHORT) 
+    passed = poll_until(self, script, "True", globaldata.TIMEOUT) 
     if passed:
         print("Validated page title is '" + title + "'.")
     else:
         failed = True
         failure = "Page '" + page + "' did not contain title '" + title + "'.\n"
-        print("FAILURE: Page '" + page + "' did not containt title '" + title + "'.")
+        print("FAILURE: Page '" + page + "' did not contain title '" + title + "'.")
 
     return [failed, failure]
 
