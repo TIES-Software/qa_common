@@ -200,6 +200,7 @@ class BaseTestCase (unittest.TestCase):
             options = webdriver.ChromeOptions()
             #Deals with chrome flag
             options.add_argument("--test-type")
+            options.add_argument("--disable-popup-blocking")
             self.driver = webdriver.Chrome(executable_path=chromedriver, chrome_options=options)      
 
 
