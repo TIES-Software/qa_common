@@ -9,6 +9,11 @@ SELENIUM = "selenium"
 
 EMAILPASS = os.environ['FP_QA_EMAIL_PASS']
 
+STG = 'stg'
+PROD = 'prod'
+DEV = 'dev'
+QA = 'qa'
+
 CHROME = 'chrome'
 FF = 'firefox'
 SAFARI = 'safari'
