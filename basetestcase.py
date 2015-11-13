@@ -44,15 +44,7 @@ class BaseTestCase (unittest.TestCase):
             display.stop()
             #Prevent any possible rouge processes
             #os.system("killall -9 xvfb")   
-        
-        
-    #def clearCache():
-    #    """This will just delete the files straight from the safari folder"""
-    #    try:
-    #        os.system("rm -rf $HOME/Library/Safari/LocalStorage/*.localstorage")
-    #    except Exception, e:
-    #        log.error("Error in clearCache: %s" %e)         
-
+            
 
     def set_test_status(self, failed, failure, **kwargs):  
         

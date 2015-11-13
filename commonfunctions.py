@@ -98,8 +98,7 @@ def wait_for_url(self, url, **kwargs):
     found = True    
     first_time = time.time()
     last_time = first_time  
-    #AB 6/1, refactored to try to eliminate false failures
-    current_url = ""#driver.current_url
+    current_url = ""
 
     if 'timeout' in kwargs:
         timeout = kwargs['timeout']
@@ -125,9 +124,7 @@ def wait_for_element_populated(self, what, element):
     populated = True
     first_time = time.time()
     last_time = first_time
-    #AB 6/2, refactored to prevent false failure with try catch
-    #and initializing to empty string
-    element_text = ""#driver.find_element(by, element).text
+    element_text = ""
     while element_text == "": 
         new_time = time.time()
         try:
@@ -152,9 +149,7 @@ def wait_for_element_to_equal(self, what, element, value, **kwargs):
     equal = True
     first_time = time.time()
     last_time = first_time
-    #AB 6/2, trying to eliminate possible false failure
     element_text = ""
-    #element_text = driver.find_element(by, element).text
     while element_text != value: 
         new_time = time.time()
         try:
@@ -176,9 +171,6 @@ def wait_for_element(self, by, what, **kwargs):
     if 'timeout' in kwargs:
         timeout_param = kwargs['timeout'] 
     
-    #AB 6/2, moved within non js conditional to eliminate a false failure
-    #self.driver.implicitly_wait(timeout_param)    
-        
     if 'exec_js' in kwargs:
         script = ""
         if by == globaldata.ID:
