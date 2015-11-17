@@ -3,7 +3,7 @@ import platform, os
 
 REPORT_DIR = os.getcwd() + "/reports/"
 SCREENSHOT_DIR = os.getcwd() + "/reports/screenshots/"
-CHROME_DRIVER_DIR = "/Users/Briel/qa/common/chromedriver"
+CHROME_DRIVER_DIR = os.environ["CHROME_DRIVER_DIR"]
 IE_DRIVER_DIR = "/Users/Briel/qa/common/IEDriverServer.exe"
 SELENIUM = "selenium"
 
