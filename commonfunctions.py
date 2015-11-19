@@ -1,10 +1,10 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
-from selenium.common.exceptions import (NoSuchElementException, 
-                                        WebDriverException, 
-                                        StaleElementReferenceException, 
-                                        ElementNotVisibleException, 
+from selenium.common.exceptions import (NoSuchElementException,
+                                        WebDriverException,
+                                        StaleElementReferenceException,
+                                        ElementNotVisibleException,
                                         InvalidElementStateException,
                                         TimeoutException)
 from selenium.webdriver.support.ui import WebDriverWait
@@ -26,7 +26,7 @@ ID_IFRAME = "iFrameId"
 
 
 #CLASSES
-        
+
 
 #FUNCTIONS
 
@@ -85,7 +85,7 @@ def close_alert(self):
         WebDriverWait(driver, 3).until(EC.alert_is_present(),
                                        'Timed out waiting for PA creation ' +
                                        'confirmation popup to appear.')
-    
+
         alert = driver.switch_to_alert()
         alert.accept()
     except TimeoutException:
@@ -95,22 +95,22 @@ def close_alert(self):
 
 def wait_for_url(self, url, **kwargs):
     driver = self.driver
-    found = True    
+    found = True
     first_time = time.time()
-    last_time = first_time  
+    last_time = first_time
     current_url = ""
 
     if 'timeout' in kwargs:
         timeout = kwargs['timeout']
     else:
         timeout = globaldata.TIMEOUT
-    
+
     while (url not in current_url):
         try:
             current_url = driver.current_url
         except Exception, e:
             current_url = ""
-        new_time = time.time()        
+        new_time = time.time()
         if  new_time - last_time > timeout:
             found = False
             break
@@ -125,7 +125,7 @@ def wait_for_element_populated(self, what, element):
     first_time = time.time()
     last_time = first_time
     element_text = ""
-    while element_text == "": 
+    while element_text == "":
         new_time = time.time()
         try:
             element_text = driver.find_element(by, element).text
@@ -133,14 +133,14 @@ def wait_for_element_populated(self, what, element):
             element_text = ""
         if  new_time - last_time > timeout:
             populated = False
-            break  
+            break
     return populated
 
 
 def wait_for_element_to_equal(self, what, element, value, **kwargs):
     driver = self.driver
     by = get_by(what)
-    
+
     if 'timeout' in kwargs:
         timeout = kwargs['timeout']
     else:
@@ -150,7 +150,7 @@ def wait_for_element_to_equal(self, what, element, value, **kwargs):
     first_time = time.time()
     last_time = first_time
     element_text = ""
-    while element_text != value: 
+    while element_text != value:
         new_time = time.time()
         try:
             element_text = driver.find_element(by, element).text
@@ -158,19 +158,19 @@ def wait_for_element_to_equal(self, what, element, value, **kwargs):
             element_text = ""
         if  new_time - last_time > timeout:
             equal = False
-            break  
+            break
     return equal
-    
+
 
 def wait_for_element(self, by, what, **kwargs):
-    
+
     driver = self.driver
     found = True
     timeout_param = globaldata.TIMEOUT
-    
+
     if 'timeout' in kwargs:
-        timeout_param = kwargs['timeout'] 
-    
+        timeout_param = kwargs['timeout']
+
     if 'exec_js' in kwargs:
         script = ""
         if by == globaldata.ID:
@@ -178,33 +178,33 @@ def wait_for_element(self, by, what, **kwargs):
         elif by == globaldata.CN:
             script = "document.getElementsByClassName('" + what + "')[0]"
         elif by == globaldata.NAME:
-            script = "document.getElementsByName('" + what + "')[0]"        
+            script = "document.getElementsByName('" + what + "')[0]"
         elif by == globaldata.TAG:
-            script = "document.getElementsByTagName('" + what + "')[0]"        
+            script = "document.getElementsByTagName('" + what + "')[0]"
 
         vscript = script + ".length"
 
         found = wait_for_script_runnable(self, vscript, timeout=timeout_param)
         if found:
             if 'click' in kwargs:
-                script = script + ".click()" 
+                script = script + ".click()"
                 driver.execute_script(script)
-       
+
     else:
-        self.driver.implicitly_wait(timeout_param) 
+        self.driver.implicitly_wait(timeout_param)
         first_time = time.time()
-        last_time = first_time   
-        while check_if_element_present(self, by, what, 
-                                       timeout=0) == False: 
+        last_time = first_time
+        while check_if_element_present(self, by, what,
+                                       timeout=0) == False:
             new_time = time.time()
             if  new_time - last_time > timeout_param:
                 found = False
                 break
-                
+
         if (('click' in kwargs) and (found == True)):
             loc_type = get_by(by)
             driver.find_element(loc_type, what).click()
-                        
+
     return found
 
 
@@ -213,17 +213,17 @@ def wait_for_element_clickable(self, by, what, **kwargs):
     driver = self.driver
     timeout_param = globaldata.TIMEOUT
     if 'timeout' in kwargs:
-        timeout_param = kwargs['timeout'] 
-    self.driver.implicitly_wait(timeout_param)      
+        timeout_param = kwargs['timeout']
+    self.driver.implicitly_wait(timeout_param)
     clicked = True
     first_time = time.time()
-    last_time = first_time   
-    while check_if_element_clickable(self, by, what, 
-                                     timeout=0) == False: 
+    last_time = first_time
+    while check_if_element_clickable(self, by, what,
+                                     timeout=0) == False:
         new_time = time.time()
         if  new_time - last_time > timeout_param:
             clicked = False
-            break 
+            break
     return clicked
 
 
@@ -242,10 +242,10 @@ def wait_for_element_text(self, by, what, link_text, **kwargs):
         script = script + "obj = document.getElementById('" + what + "'); "
     script = script + "for (i=0;i<obj.length; i++) { "
     script = script + "if (obj[i].textContent.indexOf('" + link_text + "')>-1) "
-    script = script + "{ found = true; } }; return found;" 
+    script = script + "{ found = true; } }; return found;"
 
-    found = poll_until(self, script, "True", timeout) 
-        
+    found = poll_until(self, script, "True", timeout)
+
     return found
 
 
@@ -260,37 +260,37 @@ def wait_for_link_and_click(self, by, what, link_text, **kwargs):
         script = script + "(obj[i].textContent.indexOf('" + kwargs['exclude'] + "')==-1))"
     else:
         script = script + "if (obj[i].textContent.indexOf('" + link_text + "')>-1) "
-    script = script + "{ obj[i].click(); } }"      
-    found = wait_for_element(self, by, what, exec_js=True, timeout=globaldata.TIMEOUTSHORT)  
+    script = script + "{ obj[i].click(); } }"
+    found = wait_for_element(self, by, what, exec_js=True, timeout=globaldata.TIMEOUTSHORT)
     if found:
         driver.execute_script(script)
-        
+
     return found
 
 
 
 def wait_for_element_not_present(self, by, what, **kwargs):
     first_time = time.time()
-    last_time = first_time 
+    last_time = first_time
     not_present = True
 
     if 'timeout' in kwargs:
         timeout_ = kwargs['timeout']
     else:
-        timeout_ = globaldata.TIMEOUTSHORT   
-    
-    while check_if_element_present(self, by, what, timeout=timeout_) == True: 
+        timeout_ = globaldata.TIMEOUTSHORT
+
+    while check_if_element_present(self, by, what, timeout=timeout_) == True:
         new_time = time.time()
         if  new_time - last_time > timeout_:
             not_present = False
     return not_present
 
-#HEREYO remove all thses        
+#HEREYO remove all thses
 def wait_for_element_visible(self, by, what):
     first_time = time.time()
-    last_time = first_time 
+    last_time = first_time
     visible = True
-    while check_if_element_visible(self, by, what) == False: 
+    while check_if_element_visible(self, by, what) == False:
         new_time = time.time()
         if  new_time - last_time > globaldata.TIMEOUT:
             visible = False
@@ -299,21 +299,21 @@ def wait_for_element_visible(self, by, what):
 
 def wait_for_element_not_visible(self, by, what):
     first_time = time.time()
-    last_time = first_time 
+    last_time = first_time
     visible = False
-    while check_if_element_visible(self, by, what) == True: 
+    while check_if_element_visible(self, by, what) == True:
         new_time = time.time()
         if  new_time - last_time > globaldata.TIMEOUT:
             visible = True
     return visible
 
-        
+
 def check_if_element_present(self, what, element, **kwargs):
     timeout = globaldata.TIMEOUT
     if 'timeout' in kwargs:
-        timeout = kwargs['timeout']  
-     
-    self.driver.implicitly_wait(timeout) 
+        timeout = kwargs['timeout']
+
+    self.driver.implicitly_wait(timeout)
     by = get_by(what)
 
     try:
@@ -334,25 +334,25 @@ def check_if_element_visible(self, what, element):
 
 def check_if_element_valid(self, what, element, action):
     by = get_by(what)
-    if action == 'clear':        
+    if action == 'clear':
         try:
             self.driver.find_element(by, element).clear()
         except InvalidElementStateException:
             return False
-        return True 
-    
+        return True
+
 def check_if_element_clickable(self, by, what, **kwargs):
     timeout = globaldata.TIMEOUTSHORT
     if 'timeout' in kwargs:
         timeout = kwargs['timeout']
-    self.driver.implicitly_wait(kwargs['timeout']) 
+    self.driver.implicitly_wait(kwargs['timeout'])
     try:
         self.driver.find_element(by, element).click()
     except:
         return False
     return True
-    
-    
+
+
 def get_by(what):
     by = By.ID
     if what == globaldata.LT:
@@ -360,15 +360,15 @@ def get_by(what):
     elif what == globaldata.PLT:
         by = By.PARTIAL_LINK_TEXT
     elif what == globaldata.NAME:
-        by = By.NAME  
+        by = By.NAME
     elif what == globaldata.TAG:
-        by = By.TAG_NAME  
+        by = By.TAG_NAME
     elif what == globaldata.CN:
-        by = By.CLASS_NAME  
+        by = By.CLASS_NAME
     elif what == globaldata.CSS:
-        by = By.CSS_SELECTOR  
+        by = By.CSS_SELECTOR
     elif what == globaldata.XPATH:
-        by = By.XPATH  
+        by = By.XPATH
     return by
 
 #AB 6/2, changed to general exception
@@ -376,8 +376,8 @@ def check_script(self, script):
     driver = self.driver
     try: driver.execute_script(script)
     except Exception, e: return False
-    return True 
-   
+    return True
+
 def wait_for_script_runnable(self, script, **kwargs):
     passed = True
     first_time = time.time()
@@ -388,19 +388,19 @@ def wait_for_script_runnable(self, script, **kwargs):
         timeout = globaldata.TIMEOUT
     retry_interval = globaldata.TIMEOUT_RETRY_INTERVAL
     if 'retry' in kwargs:
-        retry_interval = kwargs['retry']    
+        retry_interval = kwargs['retry']
     if 'timeout' in kwargs:
         timeout = kwargs['timeout']
     while(check_script(self, script) == False):
         new_time = time.time()
         if  new_time - last_time > timeout:
-            passed = False 
+            passed = False
             break
         else:
             time.sleep(retry_interval)
     return passed
 
-        
+
 def poll_until(self, script, condition, timeout):
     driver = self.driver
     first_time = time.time()
@@ -410,12 +410,12 @@ def poll_until(self, script, condition, timeout):
         while(str(driver.execute_script(script)) != condition):
             new_time = time.time()
             if  new_time - last_time > timeout:
-                passed = False 
+                passed = False
                 break
         return passed
     except:
         return False
-    
+
 
 
 
@@ -424,34 +424,34 @@ def poll_until(self, script, condition, timeout):
 
 def check_if_error(self, page):
     failed = False
-    failure = ""    
+    failure = ""
     driver = self.driver
     switch_to_default = True
-    
+
     try:
         driver.switch_to_frame(ID_IFRAME)
     except Exception, e:
         switch_to_default = False
-    
+
     if (wait_for_element(self, globaldata.ID, ID_CONTAINER) == False):
         failed = True
         failure = "Container did not load.\n"
         print("Container did not load.")
     else:
         container_text = driver.find_element_by_id(ID_CONTAINER).text
-        if ("EXCEPTION" in container_text.upper() and 
+        if ("EXCEPTION" in container_text.upper() and
             ("Exceptions" not in container_text)):
             failed = True
             failure = failure + "There was an exception on the page '" + page + "'.\n"
             print("FAILURE: There was an exception on the page '" + page + "'.")
         else:
             print("SUCCESS: There was no exception on the page.")
-            
+
     if switch_to_default:
         driver.switch_to_default_content()
-    
+
     return [failed, failure]
-    
+
 
 def verify_text_listed(self, text, element, element_type, **kwargs):
     failed = False
@@ -470,19 +470,19 @@ def verify_text_listed(self, text, element, element_type, **kwargs):
         failed = True
         failure = "'" + text + "' was not visible in element.\n"
         print("FAILURE: '" + text + "' was not visible in element.")
-    else: 
+    else:
         print("SUCCESS: Verified '" + text + "' was in element.")
 
     return [failed, failure]
-    
-    
+
+
 def verify_page_title(self, page, title, **kwargs):
     failed = False
     failure = ""
     print("Verifying page title '" + title + "'...")
     script = 'return document.getElementsByTagName("' + TAG_HEADER
     script = script + '")[0].textContent.indexOf( "' + title + '")>-1'
-    passed = poll_until(self, script, "True", globaldata.TIMEOUT) 
+    passed = poll_until(self, script, "True", globaldata.TIMEOUT)
     if passed:
         print("Validated page title is '" + title + "'.")
     else:
@@ -504,11 +504,11 @@ def get_element_number(self, element, text):
 
 
 def set_date(self, page, **kwargs):
-    
+
     CN_DAY = "day"
     if page == globaldata.PAGE_ACTIVITIES:
         ID_ENDDATE = "ctl00_ContentPlaceHolder1_ActivityEndDate"
-        
+
     driver = self.driver
     failed = False
     failure = ""
@@ -527,12 +527,12 @@ def set_date(self, page, **kwargs):
     else:
         driver.find_element_by_id(ID_ENDDATE).click()
         wait_for_element(self, globaldata.CN, month)
-        driver.find_element_by_class_name(month).click()            
-        script = "obj = document.getElementsByClassName('day'); for (i=0;i<obj.length; i++) { " 
-        script = script + "if (obj[i].textContent == '1') { return i;  } }"              
+        driver.find_element_by_class_name(month).click()
+        script = "obj = document.getElementsByClassName('day'); for (i=0;i<obj.length; i++) { "
+        script = script + "if (obj[i].textContent == '1') { return i;  } }"
         el_num = driver.execute_script(script)
         driver.find_elements_by_class_name(CN_DAY)[el_num].click()
-    
+
     return [failed, failure]
 
 
