@@ -63,14 +63,8 @@ def get_past_date(**kwargs):
     return return_date.strftime('%m/%d/%Y')
 
 
-def get_future_date(**kwargs):
-    return_date = datetime.datetime.now()
-    if 'days' in kwargs:
-        return_date = (datetime.datetime.now() + datetime.timedelta(+kwargs['days']))
-    #if 'months' in kwargs:
-    #    return_date = (return_date.replace(return_date.month - kwargs['months']))
-    if 'years' in kwargs:
-        return_date = (return_date.replace(return_date.year + kwargs['years']))
+def get_future_date(days_in_future):
+    return_date = datetime.datetime.now() + datetime.timedelta(days=days_in_future)
     return return_date.strftime('%m/%d/%Y')
 
 
