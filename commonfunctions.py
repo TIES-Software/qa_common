@@ -267,22 +267,10 @@ def wait_for_link_and_click(self, by, what, link_text, **kwargs):
 
     return found
 
-
-
-def wait_for_element_not_present(self, by, what, **kwargs):
-    first_time = time.time()
-    last_time = first_time
-    not_present = True
-
-    if 'timeout' in kwargs:
-        timeout_ = kwargs['timeout']
-    else:
-        timeout_ = globaldata.TIMEOUTSHORT
-
-    while check_if_element_present(self, by, what, timeout=timeout_) == True:
-        new_time = time.time()
-        if  new_time - last_time > timeout_:
-            not_present = False
+def wait_for_element_not_present(self, element, timeout):
+    driver = self.driver
+    wait = WebDriverWait(driver, timeout)
+    not_present = wait.until(EC.staleness_of(element))
     return not_present
 
 #HEREYO remove all thses
