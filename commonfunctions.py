@@ -39,7 +39,6 @@ def get_unique_name():
     unique_name = unique_name + str(d.strftime('%M'))
     return unique_name
 
-#not used to my knowledge
 def get_day_number(**kwargs):
     if 'date' in kwargs:
         day = kwargs['date'].split("/")[1].split("/")[0]
