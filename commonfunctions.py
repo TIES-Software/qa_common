@@ -198,23 +198,15 @@ def wait_for_element(self, by, what, **kwargs):
     return found
 
 
-
-def wait_for_element_clickable(self, by, what, **kwargs):
+#returns true if element is or becomes visible and clickable. False otherwise.
+def wait_for_element_clickable(self, by, locator, timeout):
     driver = self.driver
-    timeout_param = globaldata.TIMEOUT
-    if 'timeout' in kwargs:
-        timeout_param = kwargs['timeout']
     self.driver.implicitly_wait(timeout_param)
-    clicked = True
-    first_time = time.time()
-    last_time = first_time
-    while check_if_element_clickable(self, by, what,
-                                     timeout=0) == False:
-        new_time = time.time()
-        if  new_time - last_time > timeout_param:
-            clicked = False
-            break
-    return clicked
+    wait = WebDriverWait(driver, timeout)
+    #the EC.element_to_be_clickable takes in a locator, and the 'by' argument is
+    #how it is located. (eg, Xpath, css selector, id)
+    clickable = wait.until(EC.element_to_be_clickable(by, locator))
+    return clickable
 
 
 #HEREYO: Finish adding other data types (by)
