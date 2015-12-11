@@ -311,16 +311,10 @@ def check_if_element_valid(self, what, element, action):
             return False
         return True
 
-def check_if_element_clickable(self, by, what, **kwargs):
-    timeout = globaldata.TIMEOUTSHORT
-    if 'timeout' in kwargs:
-        timeout = kwargs['timeout']
-    self.driver.implicitly_wait(kwargs['timeout'])
-    try:
-        self.driver.find_element(by, element).click()
-    except:
-        return False
-    return True
+def check_if_element_clickable(self, by, locator):
+    #simply calls the function to wait for a clickable element with a
+    # 1 second timeout
+    return wait_for_element_clickable(self, by, locator, 1)
 
 
 def get_by(what):
