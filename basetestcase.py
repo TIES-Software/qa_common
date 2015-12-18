@@ -36,7 +36,7 @@ class BaseTestCase (unittest.TestCase):
 
     def setUp(self):
         driver = BaseTestCase.getDriver(self)
-        self.driver.implicitly_wait(30)
+        
 
     def tearDown(self):
         self.driver.quit()

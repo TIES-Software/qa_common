@@ -175,7 +175,6 @@ def wait_for_element(self, by, what, **kwargs):
                 driver.execute_script(script)
 
     else:
-        self.driver.implicitly_wait(timeout_param)
         first_time = time.time()
         last_time = first_time
         while check_if_element_present(self, by, what,
@@ -195,7 +194,6 @@ def wait_for_element(self, by, what, **kwargs):
 #returns true if element is or becomes visible and clickable. False otherwise.
 def wait_for_element_clickable(self, by, locator, timeout):
     driver = self.driver
-    self.driver.implicitly_wait(timeout_param)
     wait = WebDriverWait(driver, timeout)
     #the EC.element_to_be_clickable takes in a locator, and the 'by' argument is
     #how it is located. (eg, Xpath, css selector, id)
@@ -274,15 +272,16 @@ def wait_for_element_not_visible(self, by, what):
 
 def check_if_element_present(self, what, element, **kwargs):
     timeout = globaldata.TIMEOUT
+    driver = self.driver
     if 'timeout' in kwargs:
         timeout = kwargs['timeout']
 
-    self.driver.implicitly_wait(timeout)
+    wait = WebDriverWait(driver, timeout)
     by = get_by(what)
 
     try:
-        self.driver.find_element(by, element)
-    except NoSuchElementException:
+        wait.until(EC.presence_of_element_located((by, element)))
+    except TimeoutException:
         return False
     return True
 
