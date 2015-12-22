@@ -74,6 +74,12 @@ def close_alert(self):
         alert.accept()
     except TimeoutException:
         print "No alert."
+def wait_for_popup_window(self, expected_no_windows, timeout):
+    driver = self.driver
+    wait = WebDriverWait(driver, timeout)
+    new_window_present = wait.until(
+        lambda driver: len(driver.window_handles) == expected_no_windows)
+    return alert_visible
 
 
 
@@ -195,9 +201,13 @@ def wait_for_element(self, by, what, **kwargs):
 def wait_for_element_clickable(self, by, locator, timeout):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
+    by = get_by(by)
     #the EC.element_to_be_clickable takes in a locator, and the 'by' argument is
     #how it is located. (eg, Xpath, css selector, id)
-    clickable = wait.until(EC.element_to_be_clickable(by, locator))
+    try:
+        clickable = wait.until(EC.element_to_be_clickable((by, locator)))
+    except TimeoutException:
+        clickable = False
     return clickable
 
 
@@ -287,10 +297,16 @@ def check_if_element_present(self, what, element, **kwargs):
 
 
 def check_if_element_visible(self, what, element):
+    driver = self.driver
     by = get_by(what)
+    timeout = 1
+    wait = WebDriverWait(driver, timeout)
     try:
-        self.driver.find_element(by, element)
-    except ElementNotVisibleException:
+        if wait.until(EC.visibility_of_element_located((by, element))) != False:
+            return True
+        else:
+            return False
+    except TimeoutException:
         return False
     return True
 
