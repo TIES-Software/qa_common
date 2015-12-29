@@ -212,25 +212,18 @@ def wait_for_element_clickable(self, by, locator, timeout):
 
 
 #HEREYO: Finish adding other data types (by)
-def wait_for_element_text(self, by, what, link_text, **kwargs):
+def wait_for_element_text(self, by, locator, text, timeout):
     driver = self.driver
-    found = False
-    if 'timeout' in kwargs:
-        timeout = kwargs['timeout']
-    else:
-        timeout = globaldata.TIMEOUT
-    script = "found = false; "
-    if by == globaldata.CN:
-        script = script + "obj = document.getElementsByClassName('" + what + "'); "
-    elif by == globaldata.ID:
-        script = script + "obj = document.getElementById('" + what + "'); "
-    script = script + "for (i=0;i<obj.length; i++) { "
-    script = script + "if (obj[i].textContent.indexOf('" + link_text + "')>-1) "
-    script = script + "{ found = true; } }; return found;"
+    wait = WebDriverWait(driver, timeout)
+    by = get_by(by)
 
-    found = poll_until(self, script, "True", timeout)
-
-    return found
+    try:
+        #waits until given text is present within element. This checks to see
+        #if the element CONTAINS the text; does not have to be a direct match
+        text_present = wait.until(EC.text_to_be_present_in_element((by, locator), text))
+    except TimeoutException:
+        text_present = False
+    return text_present
 
 
 
