@@ -183,8 +183,7 @@ def wait_for_element(self, by, what, **kwargs):
     else:
         first_time = time.time()
         last_time = first_time
-        while check_if_element_present(self, by, what,
-                                       timeout=0) == False:
+        while check_if_element_present(self, by, what) == False:
             new_time = time.time()
             if  new_time - last_time > timeout_param:
                 found = False
@@ -273,20 +272,18 @@ def wait_for_element_not_visible(self, by, what):
     return visible
 
 
-def check_if_element_present(self, what, element, **kwargs):
-    timeout = globaldata.TIMEOUT
+def wait_for_element_present(self, by, locator, timeout):
     driver = self.driver
-    if 'timeout' in kwargs:
-        timeout = kwargs['timeout']
-
     wait = WebDriverWait(driver, timeout)
     by = get_by(what)
-
     try:
-        wait.until(EC.presence_of_element_located((by, element)))
+        present = wait.until(EC.presence_of_element_located((by, element)))
     except TimeoutException:
-        return False
-    return True
+        present = False
+    return present
+
+def check_if_element_present(self, by, locator):
+    return wait_for_element_present(self, by, locator, 1)
 
 
 def check_if_element_visible(self, what, element):
