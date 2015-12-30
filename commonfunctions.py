@@ -275,9 +275,9 @@ def wait_for_element_not_visible(self, by, what):
 def wait_for_element_present(self, by, locator, timeout):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
-    by = get_by(what)
+    by = get_by(by)
     try:
-        present = wait.until(EC.presence_of_element_located((by, element)))
+        present = wait.until(EC.presence_of_element_located((by, locator)))
     except TimeoutException:
         present = False
     return present
