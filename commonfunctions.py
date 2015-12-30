@@ -243,11 +243,21 @@ def wait_for_link_and_click(self, by, what, link_text, **kwargs):
 
     return found
 
+#Expects the element to be removed from the DOM. Return True if element is no longer in the DOM
 def wait_for_element_not_present(self, element, timeout):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
-    not_present = wait.until(EC.staleness_of(element))
-    return not_present
+    try:
+        stale = wait.until(EC.staleness_of(element))
+    except TimeoutException:
+        #element is still attached to the DOM. Not what we expect
+        stale = False
+    return stale
+
+#added for completeness
+def check_if_element_not_present(self, element):
+    timeout = 1
+    return wait_for_element_not_present(self, element, timeout)
 
 #HEREYO remove all thses
 def wait_for_element_visible(self, by, what):
@@ -283,7 +293,8 @@ def wait_for_element_present(self, by, locator, timeout):
     return present
 
 def check_if_element_present(self, by, locator):
-    return wait_for_element_present(self, by, locator, 1)
+    timeout = 1
+    return wait_for_element_present(self, by, locator, timeout)
 
 
 def check_if_element_visible(self, what, element):
