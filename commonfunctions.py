@@ -116,31 +116,6 @@ def wait_for_element_populated(self, what, element):
     return populated
 
 
-def wait_for_element_to_equal(self, what, element, value, **kwargs):
-    driver = self.driver
-    by = get_by(what)
-
-    if 'timeout' in kwargs:
-        timeout = kwargs['timeout']
-    else:
-        timeout = globaldata.TIMEOUTSHORT
-
-    equal = True
-    first_time = time.time()
-    last_time = first_time
-    element_text = ""
-    while element_text != value:
-        new_time = time.time()
-        try:
-            element_text = driver.find_element(by, element).text
-        except Exception, e:
-            element_text = ""
-        if  new_time - last_time > timeout:
-            equal = False
-            break
-    return equal
-
-
 def wait_for_element(self, by, what, **kwargs):
 
     driver = self.driver
@@ -199,8 +174,24 @@ def wait_for_element_clickable(self, by, locator, timeout):
     return clickable
 
 
-#HEREYO: Finish adding other data types (by)
-def wait_for_element_text(self, by, locator, text, timeout):
+def wait_for_element_text_to_equal(self, by, locator, text_to_equal, timeout):
+    driver = self.driver
+    #call wait_for_element_to_contain to do the wait for us, and to verify that
+    #the text is at least contained in the element.
+    if wait_for_element_text_to_contain(self, by, locator, text_to_equal, timeout):
+        #text is contained in present element, now checking for exact match
+        if text_to_equal == driver.find_element(by, locator).text:
+            equal = True
+        else:
+            #text is present, but not an exact match
+            equal = False
+    else:
+        #text is not even contained within element
+        equal = False
+    return equal
+
+
+def wait_for_element_text_to_contain(self, by, locator, text_to_contain, timeout):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     by = get_by(by)
@@ -208,7 +199,7 @@ def wait_for_element_text(self, by, locator, text, timeout):
     try:
         #waits until given text is present within element. This checks to see
         #if the element CONTAINS the text; does not have to be a direct match
-        text_present = wait.until(EC.text_to_be_present_in_element((by, locator), text))
+        text_present = wait.until(EC.text_to_be_present_in_element((by, locator), text_to_contain))
     except TimeoutException:
         text_present = False
     return text_present
