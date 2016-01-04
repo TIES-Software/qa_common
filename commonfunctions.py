@@ -9,6 +9,8 @@ from selenium.common.exceptions import (NoSuchElementException,
                                         TimeoutException)
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+#Our custom Expected Conditions
+from common import custom_EC
 from selenium.webdriver.common.action_chains import ActionChains
 import time, datetime
 from random import randint
@@ -176,19 +178,14 @@ def wait_for_element_clickable(self, by, locator, timeout):
 
 def wait_for_element_text_to_equal(self, by, locator, text_to_equal, timeout):
     driver = self.driver
-    #call wait_for_element_to_contain to do the wait for us, and to verify that
-    #the text is at least contained in the element.
-    if wait_for_element_text_to_contain(self, by, locator, text_to_equal, timeout):
-        #text is contained in present element, now checking for exact match
-        if text_to_equal == driver.find_element(by, locator).text:
-            equal = True
-        else:
-            #text is present, but not an exact match
-            equal = False
-    else:
-        #text is not even contained within element
-        equal = False
-    return equal
+    wait = WebDriverWait(driver, timeout)
+    by = get_by(by)
+
+    try:
+        text_equal = wait.until(custom_EC.exact_text_to_be_present_in_element((by, locator), text_to_equal))
+    except TimeoutException:
+        text_equal = False
+    return text_equal
 
 
 def wait_for_element_text_to_contain(self, by, locator, text_to_contain, timeout):
