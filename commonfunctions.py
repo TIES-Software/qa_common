@@ -239,27 +239,39 @@ def wait_for_element_not_present(self, element, timeout):
     not_present = wait.until(EC.staleness_of(element))
     return not_present
 
-#HEREYO remove all thses
-def wait_for_element_visible(self, by, what):
-    first_time = time.time()
-    last_time = first_time
-    visible = True
-    while check_if_element_visible(self, by, what) == False:
-        new_time = time.time()
-        if  new_time - last_time > globaldata.TIMEOUT:
-            visible = False
+
+def wait_for_element_visible(self, by, locator, timeout):
+    driver = self.driver
+    wait = WebDriverWait(driver, timeout)
+
+    try:
+        visible = wait.until(EC.visibility_of_element_located((get_by(by), locator)))
+    except TimeoutException:
+        visible = False
     return visible
 
 
-def wait_for_element_not_visible(self, by, what):
-    first_time = time.time()
-    last_time = first_time
-    visible = False
-    while check_if_element_visible(self, by, what) == True:
-        new_time = time.time()
-        if  new_time - last_time > globaldata.TIMEOUT:
-            visible = True
-    return visible
+def check_if_element_visible(self, by, locator):
+    timeout = 1
+    return wait_for_element_visible(self, by, locator, timeout)
+
+#this is more efficient than waiting for wait_for_element_visible to be false, because it skips the entire timeout
+#because we are expecting the element to be invisible, this will return as soon as it is.
+def wait_for_element_not_visible(self, by, locator, timeout):
+    driver = self.driver
+    wait = WebDriverWait(driver, timeout)
+
+    try:
+        not_visible = wait.until(EC.invisibility_of_element_located((get_by(by), locator)))
+    except TimeoutException:
+        not_visible = False
+    return not_visible
+
+
+#added for completeness, though check_if_element_visible can also provide this functionality
+def check_if_element_not_visible(self, by, locator):
+    timeout = 1
+    return wait_for_element_not_visible(self, by, locator, timeout)
 
 
 def check_if_element_present(self, what, element, **kwargs):
@@ -273,21 +285,6 @@ def check_if_element_present(self, what, element, **kwargs):
 
     try:
         wait.until(EC.presence_of_element_located((by, element)))
-    except TimeoutException:
-        return False
-    return True
-
-
-def check_if_element_visible(self, what, element):
-    driver = self.driver
-    by = get_by(what)
-    timeout = 1
-    wait = WebDriverWait(driver, timeout)
-    try:
-        if wait.until(EC.visibility_of_element_located((by, element))) != False:
-            return True
-        else:
-            return False
     except TimeoutException:
         return False
     return True
