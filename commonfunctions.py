@@ -51,11 +51,6 @@ def get_future_date(days_in_future):
     return return_date.strftime('%m/%d/%Y')
 
 
-def readystate_complete(self):
-    driver = self.driver
-    return driver.execute_script("return document.readyState") == "complete"
-
-
 def close_alert(self):
     driver = self.driver
     try:
@@ -67,13 +62,14 @@ def close_alert(self):
         alert.accept()
     except TimeoutException:
         print "No alert."
+
+
 def wait_for_popup_window(self, expected_no_windows, timeout):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     new_window_present = wait.until(
         lambda driver: len(driver.window_handles) == expected_no_windows)
     return alert_visible
-
 
 
 def wait_for_url(self, url, **kwargs):
@@ -219,7 +215,6 @@ def wait_for_element_text(self, by, locator, text, timeout):
     return text_present
 
 
-
 def wait_for_link_and_click(self, by, what, link_text, **kwargs):
     driver = self.driver
     found = False
@@ -236,6 +231,7 @@ def wait_for_link_and_click(self, by, what, link_text, **kwargs):
         driver.execute_script(script)
 
     return found
+
 
 def wait_for_element_not_present(self, element, timeout):
     driver = self.driver
@@ -306,6 +302,7 @@ def check_if_element_valid(self, what, element, action):
             return False
         return True
 
+
 def check_if_element_clickable(self, by, locator):
     #simply calls the function to wait for a clickable element with a
     # 1 second timeout
@@ -330,12 +327,14 @@ def get_by(what):
         by = By.XPATH
     return by
 
+
 #AB 6/2, changed to general exception
 def check_script(self, script):
     driver = self.driver
     try: driver.execute_script(script)
     except Exception, e: return False
     return True
+
 
 def wait_for_script_runnable(self, script, **kwargs):
     passed = True
@@ -376,11 +375,7 @@ def poll_until(self, script, condition, timeout):
         return False
 
 
-
-
-
 #VERIFICATIONS SHARED ACROSS MULTIPLE PAGES
-
 def check_if_error(self, page):
     failed = False
     failure = ""
@@ -452,7 +447,6 @@ def verify_page_title(self, page, title, **kwargs):
     return [failed, failure]
 
 
-
 def get_element_number(self, element, text):
     driver = self.driver
     script = "elements = document.getElementsByClassName('" + element + "');"
@@ -463,7 +457,6 @@ def get_element_number(self, element, text):
 
 
 def set_date(self, page, **kwargs):
-
     CN_DAY = "day"
     if page == globaldata.PAGE_ACTIVITIES:
         ID_ENDDATE = "ctl00_ContentPlaceHolder1_ActivityEndDate"
@@ -500,3 +493,4 @@ def wait_for_overlay(self):
     script = "return document.getElementsByClassName('ui-widget-overlay').length"
     if (poll_until(self, script, "0", globaldata.TIMEOUTSHORT) == False):
         print("Script overlay never completed loading!")
+        
