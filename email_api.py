@@ -130,7 +130,11 @@ def validate_email(mail, validations):
             failure = failure + "Email subject was not '" + subject_validation + "'.\n"
             print("FAILURE: Email subject was not '" + subject_validation + "'.")
 
-        if email_message['From'] == email_from:
+        #get the from address from the received email
+        received_from = email.utils.parseaddr(email_message['From'])
+        #parseaddr returns a tuple <name, email>
+
+        if received_from[1] == email_from:
             print("SUCCESS: Validated email from is '" + email_from + "'")
         else:
             passed = 1
@@ -162,5 +166,3 @@ def validate_email(mail, validations):
 def close_email(mail):
     mail.close()
     mail.logout()
-
-
