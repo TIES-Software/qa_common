@@ -7,8 +7,6 @@ CHROME_DRIVER_DIR = os.environ["CHROME_DRIVER_DIR"]
 IE_DRIVER_DIR = "/Users/Briel/qa/common/IEDriverServer.exe"
 SELENIUM = "selenium"
 
-EMAILPASS = os.environ['FP_QA_EMAIL_PASS']
-
 STG = 'stg'
 PROD = 'prod'
 DEV = 'dev'
@@ -36,10 +34,10 @@ BROWSER_LIST = [CHROME, FF, SAFARI, IE, IPHONE, IPAD, SAUCE_CHROME,
 BROWSER_HELP = '''Browser to run tests on.  All options are listed in basetestcase.py,
 and include one of the following (no quotes): ''' + str(BROWSER_LIST)
 
-
 PUBLISH_HELP = "Optional True or False argument to publish results to a junitxml file (defaults to False)."
 
 #WEBDRIVER
+#maps so selenium.By
 ID="ID"
 LT="LINK_TEXT"
 PLT="PARTIAL_LINK_TEXT"
