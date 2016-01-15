@@ -1,2 +1,2 @@
-# qa_common
-Common code and documentation to be shared across TIES.
+# qa_euronymo_common
+Common code for euronymo automated tests.
