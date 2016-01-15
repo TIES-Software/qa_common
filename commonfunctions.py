@@ -36,13 +36,6 @@ def get_unique_name():
     unique_name = unique_name + str(d.strftime('%M'))
     return unique_name
 
-def get_day_number(**kwargs):
-    if 'date' in kwargs:
-        day = kwargs['date'].split("/")[1].split("/")[0]
-    else:
-        day = datetime.datetime.today().day
-    return day
-
 
 def get_current_date_formatted():
     return time.strftime('%m/%d/%Y')
@@ -58,11 +51,6 @@ def get_future_date(days_in_future):
     return return_date.strftime('%m/%d/%Y')
 
 
-def readystate_complete(self):
-    driver = self.driver
-    return driver.execute_script("return document.readyState") == "complete"
-
-
 def close_alert(self):
     driver = self.driver
     try:
@@ -74,13 +62,14 @@ def close_alert(self):
         alert.accept()
     except TimeoutException:
         print "No alert."
+
+
 def wait_for_popup_window(self, expected_no_windows, timeout):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     new_window_present = wait.until(
         lambda driver: len(driver.window_handles) == expected_no_windows)
     return alert_visible
-
 
 
 def wait_for_url(self, url, **kwargs):
@@ -225,7 +214,6 @@ def wait_for_element_text(self, by, locator, text, timeout):
     return text_present
 
 
-
 def wait_for_link_and_click(self, by, what, link_text, **kwargs):
     driver = self.driver
     found = False
@@ -259,27 +247,39 @@ def check_if_element_not_present(self, element):
     timeout = 1
     return wait_for_element_not_present(self, element, timeout)
 
-#HEREYO remove all thses
-def wait_for_element_visible(self, by, what):
-    first_time = time.time()
-    last_time = first_time
-    visible = True
-    while check_if_element_visible(self, by, what) == False:
-        new_time = time.time()
-        if  new_time - last_time > globaldata.TIMEOUT:
-            visible = False
+
+def wait_for_element_visible(self, by, locator, timeout):
+    driver = self.driver
+    wait = WebDriverWait(driver, timeout)
+
+    try:
+        visible = wait.until(EC.visibility_of_element_located((get_by(by), locator)))
+    except TimeoutException:
+        visible = False
     return visible
 
 
-def wait_for_element_not_visible(self, by, what):
-    first_time = time.time()
-    last_time = first_time
-    visible = False
-    while check_if_element_visible(self, by, what) == True:
-        new_time = time.time()
-        if  new_time - last_time > globaldata.TIMEOUT:
-            visible = True
-    return visible
+def check_if_element_visible(self, by, locator):
+    timeout = 1
+    return wait_for_element_visible(self, by, locator, timeout)
+
+#this is more efficient than waiting for wait_for_element_visible to be false, because it skips the entire timeout
+#because we are expecting the element to be invisible, this will return as soon as it is.
+def wait_for_element_not_visible(self, by, locator, timeout):
+    driver = self.driver
+    wait = WebDriverWait(driver, timeout)
+
+    try:
+        not_visible = wait.until(EC.invisibility_of_element_located((get_by(by), locator)))
+    except TimeoutException:
+        not_visible = False
+    return not_visible
+
+
+#added for completeness, though check_if_element_visible can also provide this functionality
+def check_if_element_not_visible(self, by, locator):
+    timeout = 1
+    return wait_for_element_not_visible(self, by, locator, timeout)
 
 
 def wait_for_element_present(self, by, locator, timeout):
@@ -297,21 +297,6 @@ def check_if_element_present(self, by, locator):
     return wait_for_element_present(self, by, locator, timeout)
 
 
-def check_if_element_visible(self, what, element):
-    driver = self.driver
-    by = get_by(what)
-    timeout = 1
-    wait = WebDriverWait(driver, timeout)
-    try:
-        if wait.until(EC.visibility_of_element_located((by, element))) != False:
-            return True
-        else:
-            return False
-    except TimeoutException:
-        return False
-    return True
-
-
 def check_if_element_valid(self, what, element, action):
     by = get_by(what)
     if action == 'clear':
@@ -320,6 +305,7 @@ def check_if_element_valid(self, what, element, action):
         except InvalidElementStateException:
             return False
         return True
+
 
 def check_if_element_clickable(self, by, locator):
     #simply calls the function to wait for a clickable element with a
@@ -345,12 +331,14 @@ def get_by(what):
         by = By.XPATH
     return by
 
+
 #AB 6/2, changed to general exception
 def check_script(self, script):
     driver = self.driver
     try: driver.execute_script(script)
     except Exception, e: return False
     return True
+
 
 def wait_for_script_runnable(self, script, **kwargs):
     passed = True
@@ -391,11 +379,7 @@ def poll_until(self, script, condition, timeout):
         return False
 
 
-
-
-
 #VERIFICATIONS SHARED ACROSS MULTIPLE PAGES
-
 def check_if_error(self, page):
     failed = False
     failure = ""
@@ -467,7 +451,6 @@ def verify_page_title(self, page, title, **kwargs):
     return [failed, failure]
 
 
-
 def get_element_number(self, element, text):
     driver = self.driver
     script = "elements = document.getElementsByClassName('" + element + "');"
@@ -478,7 +461,6 @@ def get_element_number(self, element, text):
 
 
 def set_date(self, page, **kwargs):
-
     CN_DAY = "day"
     if page == globaldata.PAGE_ACTIVITIES:
         ID_ENDDATE = "ctl00_ContentPlaceHolder1_ActivityEndDate"
