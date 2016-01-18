@@ -16,9 +16,9 @@ import time, datetime
 from random import randint
 import basetestcase,globaldata
 
-***
-*  Nice set of common functions
-***
+#***
+#*  Nice set of common functions
+#***
 
 #PAGE ELEMENTS
 TAG_HEADER = "h1"
