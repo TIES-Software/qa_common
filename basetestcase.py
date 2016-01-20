@@ -46,19 +46,18 @@ class BaseTestCase (unittest.TestCase):
             #Prevent any possible rouge processes
             #os.system("killall -9 xvfb")
 
-    @classmethod
-    def set_test_status(cls, failed, failure, **kwargs):
+    def set_test_status(self, failed, failure, **kwargs):
 
         if 'savescreenshot' in kwargs:
             import time
             filename = str( lambda: int(round(time.time() * 1000)))
-            cls.driver.save_screenshot(globaldata.SCREENSHOT_DIR + filename)
+            self.driver.save_screenshot(globaldata.SCREENSHOT_DIR + filename)
 
-        if ('sauce' in cls.base_browser):
+        if ('sauce' in self.base_browser):
 
-            jobid = cls.driver.session_id
-            sauce_username = cls.saucelabs.split("_")[0]
-            sauce_accesskey = cls.saucelabs.split("_")[1]
+            jobid = self.driver.session_id
+            sauce_username = self.saucelabs.split("_")[0]
+            sauce_accesskey = self.saucelabs.split("_")[1]
 
             config = {"username": sauce_username,
                       "access-key": sauce_accesskey}
@@ -70,7 +69,7 @@ class BaseTestCase (unittest.TestCase):
             else:
                 passed = True
 
-            print("SauceOnDemandSessionID=" + jobid + " job-name=" + cls.test_title)
+            print("SauceOnDemandSessionID=" + jobid + " job-name=" + self.test_title)
 
             body_content = json.dumps({"passed": passed})
             connection =  httplib.HTTPConnection("saucelabs.com")
@@ -82,7 +81,7 @@ class BaseTestCase (unittest.TestCase):
 
         else:
             if failed:
-                cls.fail(msg=failure)
+                self.fail(msg=failure)
             else:
                 print("PASSED.\n")
 
