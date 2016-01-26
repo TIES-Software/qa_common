@@ -488,3 +488,16 @@ def wait_for_overlay(self):
     script = "return document.getElementsByClassName('ui-widget-overlay').length"
     if (poll_until(self, script, "0", globaldata.TIMEOUTSHORT) == False):
         print("Script overlay never completed loading!")
+
+#needed for adminBeta testing
+def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout):
+    driver = self.driver
+    #assert iframe is present on page
+    self.assertTrue(wait_for_element_visible(self, globaldata.ID, iframe_id, globaldata.TIMEOUTSHORT),
+                                            "iframe not present in page")
+    #change DOM to iframe's
+    driver.switch_to_frame(iframe_id)
+    visible = wait_for_element_visible(self, by, locator, timeout)
+    #switch back
+    driver.switch_to_default_content()
+    return visible
