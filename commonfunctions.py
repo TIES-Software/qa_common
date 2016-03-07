@@ -13,7 +13,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from common import custom_EC
 from selenium.webdriver.common.action_chains import ActionChains
 import time, datetime
-from random import randint
+import string
+import random
 import basetestcase,globaldata
 
 #***
@@ -31,6 +32,10 @@ ID_IFRAME = "iFrameId"
 #CLASSES
 
 #FUNCTIONS
+
+def generate_id(size=8, chars=string.letters + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
 
 def get_unique_name():
     d = datetime.datetime.now()
@@ -501,3 +506,17 @@ def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout):
     #switch back
     driver.switch_to_default_content()
     return visible
+
+def wait_for_child_element_visible(self, parent_element, by, locator, timeout):
+    driver = self.driver
+    wait = WebDriverWait(driver, timeout)
+    by = get_by(by)
+
+    try:
+        visible = wait.until(custom_EC.child_element_to_be_visible_in_element((by, locator), parent_element))
+    except TimeoutException:
+        visible = False
+    return visible
+
+def check_if_child_element_visible(self, parent_element, by, locator, timeout):
+    return wait_for_child_element_visible(self, parent_element, by, locator, 1)
