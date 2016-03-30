@@ -209,23 +209,20 @@ def wait_for_element_text_to_contain(self, by, locator, text_to_contain, timeout
         text_present = False
     return text_present
 
-
-def wait_for_link_and_click(self, by, what, link_text, **kwargs):
+def wait_for_link_and_click (self, by, locator, timeout):
     driver = self.driver
-    found = False
-    script = "obj = document.getElementsByClassName('" + what + "'); "
-    script = script + "for (i=0;i<obj.length; i++) { "
-    if 'exclude' in kwargs:
-        script = script + "if ((obj[i].textContent.indexOf('" + link_text + "')>-1) && "
-        script = script + "(obj[i].textContent.indexOf('" + kwargs['exclude'] + "')==-1))"
-    else:
-        script = script + "if (obj[i].textContent.indexOf('" + link_text + "')>-1) "
-    script = script + "{ obj[i].click(); } }"
-    found = wait_for_element(self, by, what, exec_js=True, timeout=globaldata.TIMEOUTSHORT)
-    if found:
-        driver.execute_script(script)
+    try:
+        #per locator, is element there and clickable
+        wait_for_element_clickable(self, globaldata.CSS, locator, globaldata.TIMEOUTSHORT)
+        # if locator is there then click it
+        driver.find_element_by_css_selector(locator).click()
+    except:
+        #catching all exceptions
+        #not erroring here and exiting
+        #the calling function will handle the return
+        return False
+    return True
 
-    return found
 
 #Expects the element to be removed from the DOM. Return True if element is no longer in the DOM
 def wait_for_element_not_present(self, element, timeout):
