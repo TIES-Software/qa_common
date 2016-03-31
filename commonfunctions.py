@@ -209,20 +209,16 @@ def wait_for_element_text_to_contain(self, by, locator, text_to_contain, timeout
         text_present = False
     return text_present
 
-def wait_for_link_and_click (self, by, locator, timeout):
+def wait_for_element_and_click (self, by, locator, timeout):
     driver = self.driver
+    #per locator, is element there and clickable
+    clickable = wait_for_element_clickable(self, by, locator, globaldata.TIMEOUT)
     try:
-        #per locator, is element there and clickable
-        wait_for_element_clickable(self, globaldata.CSS, locator, globaldata.TIMEOUTSHORT)
         # if locator is there then click it
-        driver.find_element_by_css_selector(locator).click()
+        clickable.click()
+        return True
     except:
-        #catching all exceptions
-        #not erroring here and exiting
-        #the calling function will handle the return
         return False
-    return True
-
 
 #Expects the element to be removed from the DOM. Return True if element is no longer in the DOM
 def wait_for_element_not_present(self, element, timeout):
