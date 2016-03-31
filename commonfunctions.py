@@ -501,10 +501,12 @@ def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout):
     self.assertTrue(wait_for_element_visible(self, globaldata.ID, iframe_id, globaldata.TIMEOUTSHORT),
                                             "iframe not present in page")
     #change DOM to iframe's
-    driver.switch_to_frame(iframe_id)
-    visible = wait_for_element_visible(self, by, locator, timeout)
-    #switch back
-    driver.switch_to_default_content()
+    driver.switch_to.frame(iframe_id)
+    try:
+        visible = wait_for_element_visible(self, by, locator, timeout)
+    finally:
+        #switch back
+        driver.switch_to.parent_frame()
     return visible
 
 def wait_for_child_element_visible(self, parent_element, by, locator, timeout):
