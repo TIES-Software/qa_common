@@ -212,7 +212,7 @@ def wait_for_element_text_to_contain(self, by, locator, text_to_contain, timeout
 def wait_for_element_and_click (self, by, locator, timeout):
     driver = self.driver
     #per locator, is element there and clickable
-    clickable = wait_for_element_clickable(self, by, locator, globaldata.TIMEOUT)
+    clickable = wait_for_element_clickable(self, by, locator, timeout)
     try:
         # if locator is there then click it
         clickable.click()
