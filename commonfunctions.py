@@ -50,6 +50,9 @@ def get_unique_name():
 def get_current_date_formatted():
     return time.strftime('%m/%d/%Y')
 
+def get_current_date_no_leading_zeros():
+    return '{dt.month}/{dt.day}/{dt.year}'.format(dt = datetime.datetime.now())
+
 
 def get_past_date(days_ago):
     return_date = datetime.datetime.now() - datetime.datetimedelta(days=days_ago)
