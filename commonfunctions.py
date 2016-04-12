@@ -425,30 +425,13 @@ def verify_text_listed(self, text, element, element_type, **kwargs):
 
     return [failed, failure]
 
-
-def verify_page_title(self, page, title, **kwargs):
-    failed = False
-    failure = ""
-    print("Verifying page title '" + title + "'...")
-    script = 'return document.getElementsByTagName("' + TAG_HEADER
-    script = script + '")[0].textContent.indexOf( "' + title + '")>-1'
-    passed = poll_until(self, script, "True", globaldata.TIMEOUT)
-    if passed:
-        print("Validated page title is '" + title + "'.")
-    else:
-        failed = True
-        failure = "Page '" + page + "' did not contain title '" + title + "'.\n"
-        print("FAILURE: Page '" + page + "' did not contain title '" + title + "'.")
-
-    return [failed, failure]
-
-
 def get_element_number(self, element, text):
     driver = self.driver
     script = "elements = document.getElementsByClassName('" + element + "');"
     script = script + "for (i=0;i<elements.length;i++){ "
     script = script + "if (elements[i].textContent == '" + text + "') { return i; } }"
     element_num = driver.execute_script(script)
+
     return int(element_num)
 
 
