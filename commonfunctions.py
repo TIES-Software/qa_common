@@ -403,28 +403,6 @@ def check_if_error(self, page):
     return [failed, failure]
 
 
-def verify_text_listed(self, text, element, element_type, **kwargs):
-    failed = False
-    failure = ""
-    driver = self.driver
-    if 'index' in kwargs:
-        index = kwargs['index']
-    else:
-        index = 0
-    if (globaldata.CN in element_type):
-        script = "return document.getElementsByClassName('" + element + "')[" + str(index) + "].textContent.indexOf('" + text + "')>-1"
-    elif (globaldata.ID in element_type):
-        script = "return document.getElementById('" + element + "').textContent.indexOf('" + text + "')>-1"
-
-    if (poll_until(self, script, "True", globaldata.TRANSFORM_TRANSITION_TIME) == False):
-        failed = True
-        failure = "'" + text + "' was not visible in element.\n"
-        print("FAILURE: '" + text + "' was not visible in element.")
-    else:
-        print("SUCCESS: Verified '" + text + "' was in element.")
-
-    return [failed, failure]
-
 def get_element_number(self, element, text):
     driver = self.driver
     script = "elements = document.getElementsByClassName('" + element + "');"
@@ -433,38 +411,6 @@ def get_element_number(self, element, text):
     element_num = driver.execute_script(script)
 
     return int(element_num)
-
-
-def set_date(self, page, **kwargs):
-    CN_DAY = "day"
-    if page == globaldata.PAGE_ACTIVITIES:
-        ID_ENDDATE = "ctl00_ContentPlaceHolder1_ActivityEndDate"
-
-    driver = self.driver
-    failed = False
-    failure = ""
-
-    #Default behavior is to set end date in future
-    if 'past' in kwargs:
-        month = 'prev'
-    else:
-        month = 'next'
-
-    if (wait_for_element(self, globaldata.ID, ID_ENDDATE, exec_js=True,
-                                        timeout=globaldata.TIMEOUTSHORT) == False):
-        failed = True
-        failure = failure + "End Date widget not found.\n"
-        print("FAILURE: End Date widget not found.")
-    else:
-        driver.find_element_by_id(ID_ENDDATE).click()
-        wait_for_element(self, globaldata.CN, month)
-        driver.find_element_by_class_name(month).click()
-        script = "obj = document.getElementsByClassName('day'); for (i=0;i<obj.length; i++) { "
-        script = script + "if (obj[i].textContent == '1') { return i;  } }"
-        el_num = driver.execute_script(script)
-        driver.find_elements_by_class_name(CN_DAY)[el_num].click()
-
-    return [failed, failure]
 
 
 def wait_for_overlay(self):
