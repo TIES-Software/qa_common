@@ -55,7 +55,7 @@ def get_current_date_no_leading_zeros():
 
 
 def get_past_date(days_ago):
-    return_date = datetime.datetime.now() - datetime.datetimedelta(days=days_ago)
+    return_date = datetime.datetime.now() - datetime.timedelta(days=days_ago)
     return return_date.strftime('%m/%d/%Y')
 
 
