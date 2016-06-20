@@ -6,7 +6,9 @@ from selenium.common.exceptions import (NoSuchElementException,
                                         StaleElementReferenceException,
                                         ElementNotVisibleException,
                                         InvalidElementStateException,
-                                        TimeoutException)
+                                        TimeoutException,
+                                        InvalidSwitchToTargetException,
+                                        NoAlertPresentException)
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 #Our custom Expected Conditions
@@ -447,3 +449,12 @@ def wait_for_child_element_visible(self, parent_element, by, locator, timeout):
 
 def check_if_child_element_visible(self, parent_element, by, locator, timeout):
     return wait_for_child_element_visible(self, parent_element, by, locator, 1)
+
+def popup_window_present(self):
+    driver = self.driver
+    try:
+        popup_found = WebDriverWait(driver, globaldata.TIMEOUTSHORT).until(EC.alert_is_present())
+        if popup_found:
+            return popup_found
+    except Exception, e:
+        return False
