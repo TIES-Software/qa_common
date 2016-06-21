@@ -39,7 +39,7 @@ class child_element_to_be_visible_in_element(object):
         except StaleElementReferenceException:
             return False
 
-class text_to_be_not_null_in_element(object):
+class element_text_to_be_non_null(object):
     """ An expectation for checking if any text is present in the
     specified element.
     Custom function for FeePay

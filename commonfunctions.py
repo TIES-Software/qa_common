@@ -205,7 +205,7 @@ def wait_for_element_text_not_null(self, by, locator, timeout):
 
     try:
         #waits until text is not null within element
-        element_not_null = wait.until(custom_EC.text_to_be_not_null_in_element((by, locator)))
+        element_not_null = wait.until(custom_EC.element_text_to_be_non_null((by, locator)))
     except TimeoutException:
         element_not_null = False
     return element_not_null
