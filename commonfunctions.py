@@ -6,9 +6,7 @@ from selenium.common.exceptions import (NoSuchElementException,
                                         StaleElementReferenceException,
                                         ElementNotVisibleException,
                                         InvalidElementStateException,
-                                        TimeoutException,
-                                        InvalidSwitchToTargetException,
-                                        NoAlertPresentException)
+                                        TimeoutException)
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 #Our custom Expected Conditions
