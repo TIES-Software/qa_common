@@ -200,6 +200,18 @@ def wait_for_element_text_to_equal(self, by, locator, text_to_equal, timeout):
         text_equal = False
     return text_equal
 
+def wait_for_element_text_not_null(self, by, locator, timeout):
+    driver = self.driver
+    wait = WebDriverWait(driver, timeout)
+    by = get_by(by)
+
+    try:
+        #waits until text is not null within element
+        element_not_null = wait.until(custom_EC.text_to_be_not_null_in_element((by, locator)))
+    except TimeoutException:
+        element_not_null = False
+    return element_not_null
+
 
 def wait_for_element_text_to_contain(self, by, locator, text_to_contain, timeout):
     driver = self.driver

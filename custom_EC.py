@@ -38,3 +38,19 @@ class child_element_to_be_visible_in_element(object):
             return _element_if_visible(child_element)
         except StaleElementReferenceException:
             return False
+
+class text_to_be_not_null_in_element(object):
+    """ An expectation for checking if any text is present in the
+    specified element.
+    Custom function for FeePay
+    locator
+    """
+    def __init__(self, locator):
+        self.locator = locator
+
+    def __call__(self, driver):
+        try :
+            element_text = _find_element(driver, self.locator).text
+            return element_text is not ""
+        except StaleElementReferenceException:
+            return False
