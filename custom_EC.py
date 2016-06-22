@@ -50,7 +50,8 @@ class element_text_to_be_non_null(object):
 
     def __call__(self, driver):
         try :
-            element_text = _find_element(driver, self.locator).text
-            return element_text is not ""
+            element = _find_element(driver, self.locator).text
+            if element is not "":
+                return element
         except StaleElementReferenceException:
             return False
