@@ -435,8 +435,7 @@ def wait_for_overlay(self):
 def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout):
     driver = self.driver
     #assert iframe is present on page
-    self.assertTrue(wait_for_element_visible(self, globaldata.ID, iframe_id, globaldata.TIMEOUTSHORT),
-                                            "iframe not present in page")
+    assert wait_for_element_visible(self, globaldata.ID, iframe_id, globaldata.TIMEOUTSHORT), "iframe not present in page"
     #change DOM to iframe's
     driver.switch_to.frame(iframe_id)
     try:
