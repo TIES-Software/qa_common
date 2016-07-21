@@ -64,6 +64,14 @@ def get_future_date(days_in_future):
     return return_date.strftime('%m/%d/%Y')
 
 
+def close_all_additional_windows(self):
+    driver = self.driver
+    while len(driver.window_handles) > 1:
+            driver.switch_to.window(driver.window_handles[-1])
+            driver.close()
+    driver.switch_to.window(driver.window_handles[0])
+
+
 def close_alert(self):
     driver = self.driver
     try:
