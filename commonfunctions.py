@@ -64,6 +64,12 @@ def get_future_date(days_in_future):
     return return_date.strftime('%m/%d/%Y')
 
 
+def wait_for_jquery_inactive(self, timeout):
+    # waits until jQuery finishes executing
+    script = 'return jQuery.active'
+    poll_until(self, script, "0", timeout)
+
+
 def close_alert(self):
     driver = self.driver
     try:
