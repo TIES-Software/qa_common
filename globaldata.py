@@ -1,5 +1,5 @@
-from random import randint
-import platform, os
+import platform
+import os
 
 REPORT_DIR = os.getcwd() + "/reports/"
 SCREENSHOT_DIR = os.getcwd() + "/reports/screenshots/"
@@ -37,23 +37,21 @@ and include one of the following (no quotes): ''' + str(BROWSER_LIST)
 
 PUBLISH_HELP = "Optional True or False argument to publish results to a junitxml file (defaults to False)."
 
-#WEBDRIVER
-#maps so selenium.By
-ID="ID"
-LT="LINK_TEXT"
-PLT="PARTIAL_LINK_TEXT"
-NAME="NAME"
-TAG="TAG_NAME"
-CN="CLASS_NAME"
-CSS="CSS_SELECTOR"
-XPATH="XPATH"
+ID = "ID"
+LT = "LINK_TEXT"
+PLT = "PARTIAL_LINK_TEXT"
+NAME = "NAME"
+TAG = "TAG_NAME"
+CN = "CLASS_NAME"
+CSS = "CSS_SELECTOR"
+XPATH = "XPATH"
 
-TIMEOUT= 20
-TIMEOUTSHORT= 10
+TIMEOUT = 20
+TIMEOUTSHORT = 10
 TIMEOUTSHORTEST = 5
-TIMEOUTLONG= 50
-TIMEOUT_RETRY_INTERVAL= 0.1
-TRANSFORM_TRANSITION_TIME= 1
+TIMEOUTLONG = 50
+TIMEOUT_RETRY_INTERVAL = 0.1
+TRANSFORM_TRANSITION_TIME = 1
 LONG_TRANSITION_TIME = 2
 
 FAILURE_MSG = "FAILED - The following verifications failed:\n"
