@@ -243,16 +243,6 @@ def wait_for_element_not_visible(self, by, locator, timeout):
     return not_visible
 
 
-def check_if_element_valid(self, what, element, action):
-    by = get_by(what)
-    if action == 'clear':
-        try:
-            self.driver.find_element(by, element).clear()
-        except InvalidElementStateException:
-            return False
-        return True
-
-
 # needed for adminBeta testing
 def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout):
     driver = self.driver
