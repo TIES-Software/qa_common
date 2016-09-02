@@ -338,7 +338,7 @@ def poll_until(self, script, condition, timeout):
         return False
 
 
-# TODO: Phase out this function and remove.
+# TODO: Phase out this function and remove. Github issue #22
 def wait_for_element(self, by, what, **kwargs):
 
     driver = self.driver
