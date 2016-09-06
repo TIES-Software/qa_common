@@ -23,16 +23,6 @@ class BaseTestCase (unittest.TestCase):
     #accessed by getDriver method
     global display
 
-    #Declaration of display on mac 'darwin' platform throws error
-    if 'linux' in sys.platform:
-        from pyvirtualdisplay import Display
-        display = Display(visible=0, size=(800, 600))
-        #Creating firefox binary within display context
-        #import pyvirtualdisplay
-        #with pyvirtualdisplay.Display(visible=True):
-        #    if True:  # Set to False to use Chrome...
-        #        binary = FirefoxBinary()
-        #        driver = webdriver.Firefox(None, binary)
 
     @classmethod
     def setUpClass(cls):
