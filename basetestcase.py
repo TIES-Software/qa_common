@@ -164,18 +164,8 @@ class BaseTestCase (unittest.TestCase):
 
         elif (cls.base_browser == 'safari'):
             cls.driver = webdriver.Safari()
-            #dc = webdriver.DesiredCapabilities.SAFARI
-            #sa = webdriver.Safari(desired_capabilities=dc)
-            #sa.set
-            #dc.setdefault(dc, sa)
-            #ensureCleanSession' => true
-
-
 
         elif (cls.base_browser == 'chrome'):
-            if 'linux' in sys.platform:
-                display.start()
-
 
             chromedriver = globaldata.CHROME_DRIVER_DIR
             os.environ["webdriver.chrome.driver"] = chromedriver
