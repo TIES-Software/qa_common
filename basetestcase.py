@@ -18,12 +18,6 @@ except ImportError:
 
 class BaseTestCase (unittest.TestCase):
 
-    #HEADLESS
-    #NOTE: display needs to be declared outside of set up in order to be
-    #accessed by getDriver method
-    global display
-
-
     @classmethod
     def setUpClass(cls):
         driver = cls.getDriver()
@@ -31,10 +25,6 @@ class BaseTestCase (unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.driver.quit()
-        if 'linux' in sys.platform:
-            display.stop()
-            #Prevent any possible rouge processes
-            #os.system("killall -9 xvfb")
 
     def set_test_status(self, failed, failure, **kwargs):
 
@@ -129,23 +119,8 @@ class BaseTestCase (unittest.TestCase):
         elif (cls.base_browser == 'phantomjs'):
             cls.driver = webdriver.PhantomJS(executable_path='/usr/bin/phantomjs-1.9.8-linux-x86_64/bin/phantomjs')
 
-
         elif (cls.base_browser == 'firefox'):
-            if 'linux' in sys.platform:
-                display.start()
-                #print("Initiated firefox object in display context")
-            #else:
-            #NON LONG-POLLING
             cls.driver = webdriver.Firefox()
-
-            #LONG-POLLING
-            #fp = webdriver.FirefoxProfile()
-            #fp.set_preference("webdriver.load.strategy", "unstable")
-            #CAPTURE LOGGING
-            #fp.set_preference("webdriver.log.file", "/Users/Briel/qa/webdriver_firefox_log")
-            #cls.driver = webdriver.Firefox(firefox_profile=fp)
-
-
 
         elif (cls.base_browser == 'ie11'):
             #Forcing path of IEDriver to point to 32 bit version due to:
@@ -164,18 +139,8 @@ class BaseTestCase (unittest.TestCase):
 
         elif (cls.base_browser == 'safari'):
             cls.driver = webdriver.Safari()
-            #dc = webdriver.DesiredCapabilities.SAFARI
-            #sa = webdriver.Safari(desired_capabilities=dc)
-            #sa.set
-            #dc.setdefault(dc, sa)
-            #ensureCleanSession' => true
-
-
 
         elif (cls.base_browser == 'chrome'):
-            if 'linux' in sys.platform:
-                display.start()
-
 
             chromedriver = globaldata.CHROME_DRIVER_DIR
             os.environ["webdriver.chrome.driver"] = chromedriver
