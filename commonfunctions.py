@@ -247,7 +247,7 @@ def wait_for_element_not_visible(self, by, locator, timeout):
     return not_visible
 
 
-# needed for adminBeta testing
+# Iframe Operations
 def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout):
     driver = self.driver
     assert wait_for_element_visible(self, globaldata.ID, iframe_id, globaldata.TIMEOUTSHORT), "iframe not present in page"
@@ -257,6 +257,22 @@ def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout):
     finally:
         driver.switch_to.parent_frame()
     return visible
+
+
+def wait_for_element_in_iframe_and_click(self, iframe_id, by, locator, timeout):
+    driver = self.driver
+    assert wait_for_element_visible(self, globaldata.ID, iframe_id, globaldata.TIMEOUTSHORT), "iframe not present in page"
+    driver.switch_to.frame(iframe_id)
+    try:
+        element = wait_for_element_clickable(self, by, locator, timeout)
+        if bool(element):
+            element.click()
+            clicked= True
+        else:
+            clicked = False
+    finally:
+        driver.switch_to.parent_frame()
+    return clicked
 
 
 def wait_for_child_element_visible(self, parent_element, by, locator, timeout):
