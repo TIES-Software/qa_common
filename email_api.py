@@ -14,7 +14,7 @@ from pageobjectsfrontend import checkout
 
 #Email variables
 EMAIL_NOREPLY = "noreply@feepay.com"
-EMAIL_SUBJECT = "TIES Test District, #987 TEST FeePay Receipt"
+EMAIL_SUBJECT = "FeePay Receipt"
 CC = "Credit card"
 CHECKING = "Checking"
 SAVINGS = "Savings"
@@ -62,8 +62,6 @@ def clean_inbox(mail):
     failed = False
     failure = ""
 
-    print("Cleaning email inbox...")
-
     mail.select("inbox")
     result, email_data = mail.search(None, "ALL")
     for num in email_data[0].split():
@@ -87,6 +85,7 @@ def clean_inbox(mail):
 
     if not failed:
         print("SUCCESS: Emails successfully expunged.")
+        return True
 
     return [failed, failure]
 
@@ -98,8 +97,8 @@ def validate_email(mail, validations):
     failure = ""
     subject_validation = EMAIL_SUBJECT
     email_from = EMAIL_NOREPLY
+    success = 0
 
-    print("Looping inbox until mail received...")
     mail.select("inbox")
     result, email_data = mail.search(None, "ALL")
     ids = email_data[0]
@@ -114,7 +113,7 @@ def validate_email(mail, validations):
             failed = True
             failure = failure + "Email not received within " + str(globaldata.TIMEOUTLONG) + " seconds.\n"
             print("FAILURE: Email not received within " + str(globaldata.TIMEOUTLONG) + " seconds.")
-            break
+            return False
 
     if not failed:
         id_list = ids.split()
@@ -129,6 +128,7 @@ def validate_email(mail, validations):
             failed = True
             failure = failure + "Email subject was not '" + subject_validation + "'.\n"
             print("FAILURE: Email subject was not '" + subject_validation + "'.")
+            return False
 
         #get the from address from the received email
         received_from = email.utils.parseaddr(email_message['From'])
@@ -137,14 +137,12 @@ def validate_email(mail, validations):
         if received_from[1] == email_from:
             print("SUCCESS: Validated email from is '" + email_from + "'")
         else:
-            passed = 1
             failure = failure + "Email from was not '" + email_from + "'.\n"
             print("FAILURE: Email from was not '" + email_from + "'.")
-
+            return False
 
         try:
-            body_text = email_message.get_payload()[0].as_string()
-
+            body_text = email_message.get_payload()
             #Check each validation passed in
             for validation in validations:
                 if validation in body_text:
@@ -153,13 +151,14 @@ def validate_email(mail, validations):
                     failed = True
                     failure = failure + "Email body did not contain '" + validation + ".\n"
                     print("FAILURE: Email body did not contain '" + validation + ".")
+                    return False
 
         except Exception, e:
             failed = True
             failure = failure + "Exception in getting payload for '"
-            failure = failure + json_type + ": " + e
+            return False
 
-    return [failed, failure]
+    return True
 
 
 
