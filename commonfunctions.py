@@ -385,3 +385,20 @@ def wait_for_element(self, by, what, **kwargs):
             driver.find_element(loc_type, what).click()
 
     return found
+
+def wait_for_handle_to_load_and_switch(self, handle_index = 1, timeout = globaldata.TIMEOUTSHORTEST):
+    driver = self.driver
+    count = 0
+    while ((len(driver.window_handles) <= handle_index) and count <= timeout):
+        count = count + 1
+        time.sleep(1)
+    return driver.switch_to_window(driver.window_handles[handle_index])
+
+def close_all_handles_and_switch_to_default_handle(self):
+    driver = self.driver
+    count = len(driver.window_handles) - 1
+    while(0 < count):
+        driver.switch_to_window(driver.window_handles[count])
+        driver.close()
+        count = count - 1
+    return driver.switch_to_window(driver.window_handles[0])
