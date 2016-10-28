@@ -393,12 +393,3 @@ def wait_for_handle_to_load_and_switch(self, handle_index = 1, timeout = globald
         count = count + 1
         time.sleep(1)
     return driver.switch_to_window(driver.window_handles[handle_index])
-
-def close_all_handles_and_switch_to_default_handle(self):
-    driver = self.driver
-    count = len(driver.window_handles) - 1
-    while(0 < count):
-        driver.switch_to_window(driver.window_handles[count])
-        driver.close()
-        count = count - 1
-    return driver.switch_to_window(driver.window_handles[0])
