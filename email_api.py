@@ -84,7 +84,7 @@ def clean_inbox(mail):
             break
 
     if not failed:
-        print("SUCCESS: Emails successfully expunged.")
+        # print("SUCCESS: Emails successfully expunged.")
         return True
 
     return [failed, failure]
@@ -122,9 +122,9 @@ def validate_email(mail, validations):
         raw_email = email_data[0][1]
         email_message = email.message_from_string(raw_email)
 
-        if email_message['Subject'] == subject_validation:
-            print("SUCCESS: Validated email subject is '" + subject_validation + "'")
-        else:
+        if email_message['Subject'] != subject_validation:
+            #print("SUCCESS: Validated email subject is '" + subject_validation + "'")
+        #else:
             failed = True
             failure = failure + "Email subject was not '" + subject_validation + "'.\n"
             print("FAILURE: Email subject was not '" + subject_validation + "'.")
@@ -135,7 +135,8 @@ def validate_email(mail, validations):
         #parseaddr returns a tuple <name, email>
 
         if received_from[1] == email_from:
-            print("SUCCESS: Validated email from is '" + email_from + "'")
+            # print("SUCCESS: Validated email from is '" + email_from + "'")
+            next
         else:
             failure = failure + "Email from was not '" + email_from + "'.\n"
             print("FAILURE: Email from was not '" + email_from + "'.")
@@ -146,7 +147,8 @@ def validate_email(mail, validations):
             #Check each validation passed in
             for validation in validations:
                 if validation in body_text:
-                    print("SUCCESS: Validated email body contained '" + validation + "'.")
+                    # print("SUCCESS: Validated email body contained '" + validation + "'.")
+                    next
                 else:
                     failed = True
                     failure = failure + "Email body did not contain '" + validation + ".\n"

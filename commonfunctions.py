@@ -75,6 +75,14 @@ def wait_for_jquery_inactive(self, timeout):
     script = 'return jQuery.active'
     poll_until(self, script, "0", timeout)
 
+def wait_for_handle_to_load_and_switch(self, handle_index = 1, timeout = globaldata.TIMEOUTSHORTEST):
+    driver = self.driver
+    count = 0
+    while ((len(driver.window_handles) <= handle_index) and count <= timeout):
+        count = count + 1
+        time.sleep(1)
+    return driver.switch_to_window(driver.window_handles[handle_index])
+
 
 def close_all_additional_windows(self):
     driver = self.driver
@@ -385,11 +393,3 @@ def wait_for_element(self, by, what, **kwargs):
             driver.find_element(loc_type, what).click()
 
     return found
-
-def wait_for_handle_to_load_and_switch(self, handle_index = 1, timeout = globaldata.TIMEOUTSHORTEST):
-    driver = self.driver
-    count = 0
-    while ((len(driver.window_handles) <= handle_index) and count <= timeout):
-        count = count + 1
-        time.sleep(1)
-    return driver.switch_to_window(driver.window_handles[handle_index])
