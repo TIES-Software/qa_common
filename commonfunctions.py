@@ -70,10 +70,10 @@ def get_future_date(days_in_future):
     return return_date.strftime('%m/%d/%Y')
 
 
-def wait_for_jquery_inactive(self, timeout):
+def wait_for_jquery_inactive(self, timeout=globaldata.TIMEOUTSHORT):
     # waits until jQuery finishes executing
     script = 'return jQuery.active'
-    poll_until(self, script, "0", timeout)
+    poll_until(self, script, "0", timeout=globaldata.TIMEOUTSHORT)
 
 
 def close_all_additional_windows(self):
@@ -95,7 +95,7 @@ def close_alert(self):
         print "No alert."
 
 
-def wait_for_popup_window(self, expected_num_windows, timeout):
+def wait_for_popup_window(self, expected_num_windows, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     new_window_present = wait.until(
@@ -126,7 +126,7 @@ def check_if_element_clickable(self, by, locator):
     return wait_for_element_clickable(self, by, locator, 1)
 
 
-def wait_for_element_clickable(self, by, locator, timeout):
+def wait_for_element_clickable(self, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     by = get_by(by)
@@ -138,7 +138,7 @@ def wait_for_element_clickable(self, by, locator, timeout):
     return clickable
 
 
-def wait_for_element_and_click(self, by, locator, timeout):
+def wait_for_element_and_click(self, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     clickable = wait_for_element_clickable(self, by, locator, timeout)
     try:
@@ -148,7 +148,7 @@ def wait_for_element_and_click(self, by, locator, timeout):
         return False
 
 
-def wait_for_element_text_to_equal(self, by, locator, text_to_equal, timeout):
+def wait_for_element_text_to_equal(self, by, locator, text_to_equal, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     by = get_by(by)
@@ -160,7 +160,7 @@ def wait_for_element_text_to_equal(self, by, locator, text_to_equal, timeout):
     return text_equal
 
 
-def wait_for_element_text_not_null(self, by, locator, timeout):
+def wait_for_element_text_not_null(self, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     by = get_by(by)
@@ -172,7 +172,7 @@ def wait_for_element_text_not_null(self, by, locator, timeout):
     return element_not_null
 
 
-def wait_for_element_text_to_contain(self, by, locator, text_to_contain, timeout):
+def wait_for_element_text_to_contain(self, by, locator, text_to_contain, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     by = get_by(by)
@@ -194,7 +194,7 @@ def check_if_element_not_present(self, by, locator):
     return wait_for_element_not_present(self, by, locator, timeout)
 
 
-def wait_for_element_present(self, by, locator, timeout):
+def wait_for_element_present(self, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     by = get_by(by)
@@ -205,7 +205,7 @@ def wait_for_element_present(self, by, locator, timeout):
     return present
 
 
-def wait_for_element_not_present(self, element, timeout):
+def wait_for_element_not_present(self, element, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     try:
@@ -225,7 +225,7 @@ def check_if_element_not_visible(self, by, locator):
     return wait_for_element_not_visible(self, by, locator, timeout)
 
 
-def wait_for_element_visible(self, by, locator, timeout):
+def wait_for_element_visible(self, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
 
@@ -236,7 +236,7 @@ def wait_for_element_visible(self, by, locator, timeout):
     return visible
 
 
-def wait_for_element_not_visible(self, by, locator, timeout):
+def wait_for_element_not_visible(self, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
 
@@ -248,7 +248,7 @@ def wait_for_element_not_visible(self, by, locator, timeout):
 
 
 # needed for adminBeta testing
-def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout):
+def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     assert wait_for_element_visible(self, globaldata.ID, iframe_id, globaldata.TIMEOUTSHORT), "iframe not present in page"
     driver.switch_to.frame(iframe_id)
@@ -259,7 +259,7 @@ def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout):
     return visible
 
 
-def wait_for_child_element_visible(self, parent_element, by, locator, timeout):
+def wait_for_child_element_visible(self, parent_element, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     by = get_by(by)
@@ -271,7 +271,7 @@ def wait_for_child_element_visible(self, parent_element, by, locator, timeout):
     return visible
 
 
-def check_if_child_element_visible(self, parent_element, by, locator, timeout):
+def check_if_child_element_visible(self, parent_element, by, locator, timeout=globaldata.TIMEOUTSHORT):
     return wait_for_child_element_visible(self, parent_element, by, locator, 1)
 
 
@@ -326,7 +326,7 @@ def wait_for_script_runnable(self, script, **kwargs):
     return passed
 
 
-def poll_until(self, script, condition, timeout):
+def poll_until(self, script, condition, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     first_time = time.time()
     last_time = first_time
