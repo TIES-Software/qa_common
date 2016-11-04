@@ -19,6 +19,21 @@ ID_IFRAME = "iFrameId"
 
 
 # FUNCTIONS
+def get_driver(browser):
+    if (browser == 'chrome'):
+        path_to_chrome_driver = globaldata.CHROME_DRIVER_DIR
+        options = webdriver.ChromeOptions()
+        options.add_argument("--test-type")
+        options.add_argument("--disable-popup-blocking")
+        context.driver = webdriver.Chrome(executable_path=path_to_chrome_driver, chrome_options=options)
+
+    elif (browser == 'firefox'):
+        caps = DesiredCapabilities.FIREFOX
+        caps["marionette"] = True
+        caps["binary"] = globaldata.FIREFOX_BINARY_PATH
+        self.driver = webdriver.Firefox(capabilities=caps)
+
+
 def get_by(what):
     by = By.ID
     if what == globaldata.LT:
