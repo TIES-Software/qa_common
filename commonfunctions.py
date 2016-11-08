@@ -25,7 +25,7 @@ def get_driver(browser):
         options = webdriver.ChromeOptions()
         options.add_argument("--test-type")
         options.add_argument("--disable-popup-blocking")
-        context.driver = webdriver.Chrome(executable_path=path_to_chrome_driver, chrome_options=options)
+        driver = webdriver.Chrome(executable_path=path_to_chrome_driver, chrome_options=options)
 
     else:
         if (browser != 'firefox'):
@@ -33,7 +33,9 @@ def get_driver(browser):
         caps = DesiredCapabilities.FIREFOX
         caps["marionette"] = True
         caps["binary"] = globaldata.FIREFOX_BINARY_PATH
-        self.driver = webdriver.Firefox(capabilities=caps)
+        driver = webdriver.Firefox(capabilities=caps)
+
+    return driver
 
 
 def get_by(what):
