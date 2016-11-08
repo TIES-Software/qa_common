@@ -27,7 +27,9 @@ def get_driver(browser):
         options.add_argument("--disable-popup-blocking")
         context.driver = webdriver.Chrome(executable_path=path_to_chrome_driver, chrome_options=options)
 
-    elif (browser == 'firefox'):
+    else:
+        if (browser != 'firefox'):
+            print ("Unable to create driver for " + browser + ". Using Firefox instead.")
         caps = DesiredCapabilities.FIREFOX
         caps["marionette"] = True
         caps["binary"] = globaldata.FIREFOX_BINARY_PATH
