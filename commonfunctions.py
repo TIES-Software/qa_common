@@ -144,8 +144,9 @@ def wait_for_element_and_click(self, by, locator, timeout):
     try:
         clickable.click()
         return True
-    except:
-        return False
+    except Exception as e:
+        print(e)
+        return e
 
 
 def wait_for_element_text_to_equal(self, by, locator, text_to_equal, timeout):
