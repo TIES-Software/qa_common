@@ -104,6 +104,15 @@ def close_all_additional_windows(self):
     driver.switch_to.window(driver.window_handles[0])
 
 
+def wait_for_handle_to_load_and_switch(self, handle_index, timeout):
+    driver = self.driver
+    count = 0
+    while ((len(driver.window_handles) <= handle_index) and count <= timeout):
+        count = count + 1
+        time.sleep(1)
+    driver.switch_to_window(driver.window_handles[handle_index])
+
+
 def close_alert(self):
     driver = self.driver
     try:
