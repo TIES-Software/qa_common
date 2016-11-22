@@ -7,7 +7,8 @@ import imaplib
 import email
 import time
 
-import globaldata, commonfunctions
+import globaldata
+import commonfunctions as cf
 from pageobjectsfrontend import checkout
 
 
