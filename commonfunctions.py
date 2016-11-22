@@ -95,6 +95,10 @@ def wait_for_jquery_inactive(self, timeout=globaldata.TIMEOUTSHORT):
     script = 'return jQuery.active'
     poll_until(self, script, "0", timeout=globaldata.TIMEOUTSHORT)
 
+######
+# Window Handle Functions
+######
+
 
 def close_all_additional_windows(self):
     driver = self.driver
@@ -132,6 +136,7 @@ def wait_for_popup_window(self, expected_num_windows, timeout=globaldata.TIMEOUT
     return alert_visible
 
 
+# depricated
 def wait_for_url(self, url, timeout=globaldata.TIMEOUT):
     driver = self.driver
     found = True
@@ -149,6 +154,10 @@ def wait_for_url(self, url, timeout=globaldata.TIMEOUT):
             found = False
             break
     return found
+
+######
+# Page Element Functions
+######
 
 
 def check_if_element_clickable(self, by, locator):
