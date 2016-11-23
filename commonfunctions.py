@@ -108,7 +108,7 @@ def close_all_additional_windows(self):
     driver.switch_to.window(driver.window_handles[0])
 
 
-def wait_for_handle_to_load_and_switch(self, handle_index, timeout):
+def wait_for_handle_to_load_and_switch(self, handle_index, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     count = 0
     while ((len(driver.window_handles) <= handle_index) and count <= timeout):
@@ -135,25 +135,6 @@ def wait_for_popup_window(self, expected_num_windows, timeout=globaldata.TIMEOUT
         lambda driver: len(driver.window_handles) == expected_num_windows)
     return alert_visible
 
-
-# depricated
-def wait_for_url(self, url, timeout=globaldata.TIMEOUT):
-    driver = self.driver
-    found = True
-    first_time = time.time()
-    last_time = first_time
-    current_url = ""
-
-    while (url not in current_url):
-        try:
-            current_url = driver.current_url
-        except Exception, e:
-            current_url = ""
-        new_time = time.time()
-        if new_time - last_time > timeout:
-            found = False
-            break
-    return found
 
 ######
 # Page Element Functions
@@ -302,9 +283,9 @@ def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout=glo
     return visible
 
 
-def wait_for_element_in_iframe_and_click(self, iframe_id, by, locator, timeout):
+def wait_for_element_in_iframe_and_click(self, iframe_id, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
-    assert wait_for_element_visible(self, globaldata.ID, iframe_id, globaldata.TIMEOUTSHORT), "iframe not present in page"
+    assert wait_for_element_visible(self, globaldata.ID, iframe_id, timeout), "iframe not present in page"
     driver.switch_to.frame(iframe_id)
     try:
         element = wait_for_element_clickable(self, by, locator, timeout)
@@ -353,6 +334,25 @@ def wait_for_overlay(self):
 
 
 # Depricated
+def wait_for_url(self, url, timeout=globaldata.TIMEOUTSHORT):
+    driver = self.driver
+    found = True
+    first_time = time.time()
+    last_time = first_time
+    current_url = ""
+
+    while (url not in current_url):
+        try:
+            current_url = driver.current_url
+        except Exception, e:
+            current_url = ""
+        new_time = time.time()
+        if new_time - last_time > timeout:
+            found = False
+            break
+    return found
+
+
 def check_script(self, script):
     driver = self.driver
     try:
