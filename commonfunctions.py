@@ -184,7 +184,7 @@ def wait_for_element_and_click(self, by, locator, timeout=globaldata.TIMEOUTSHOR
         return True
     except Exception as e:
         print(e)
-        return e
+        return False
 
 
 def wait_for_element_text_to_equal(self, by, locator, text_to_equal, timeout=globaldata.TIMEOUTSHORT):
@@ -285,6 +285,10 @@ def wait_for_element_not_visible(self, by, locator, timeout=globaldata.TIMEOUTSH
         not_visible = False
     return not_visible
 
+
+######
+# Iframe Operations
+######
 
 # needed for adminBeta testing
 def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout=globaldata.TIMEOUTSHORT):
