@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import *
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from common import custom_EC
 import time
 import datetime
@@ -19,6 +20,25 @@ ID_IFRAME = "iFrameId"
 
 
 # FUNCTIONS
+def get_driver(browser):
+    if (browser == 'chrome'):
+        path_to_chrome_driver = globaldata.CHROME_DRIVER_DIR
+        options = webdriver.ChromeOptions()
+        options.add_argument("--test-type")
+        options.add_argument("--disable-popup-blocking")
+        driver = webdriver.Chrome(executable_path=path_to_chrome_driver, chrome_options=options)
+
+    else:
+        if (browser != 'firefox'):
+            print ("Unable to create driver for " + browser + ". Using Firefox instead.")
+        caps = DesiredCapabilities.FIREFOX
+        caps["marionette"] = True
+        caps["binary"] = globaldata.FIREFOX_BINARY_PATH
+        driver = webdriver.Firefox(capabilities=caps)
+
+    return driver
+
+
 def get_by(what):
     by = By.ID
     if what == globaldata.LT:
@@ -70,18 +90,14 @@ def get_future_date(days_in_future):
     return return_date.strftime('%m/%d/%Y')
 
 
-def wait_for_jquery_inactive(self, timeout):
+def wait_for_jquery_inactive(self, timeout=globaldata.TIMEOUTSHORT):
     # waits until jQuery finishes executing
     script = 'return jQuery.active'
-    poll_until(self, script, "0", timeout)
+    poll_until(self, script, "0", timeout=globaldata.TIMEOUTSHORT)
 
-def wait_for_handle_to_load_and_switch(self, handle_index = 1, timeout = globaldata.TIMEOUTSHORTEST):
-    driver = self.driver
-    count = 0
-    while ((len(driver.window_handles) <= handle_index) and count <= timeout):
-        count = count + 1
-        time.sleep(1)
-    return driver.switch_to_window(driver.window_handles[handle_index])
+######
+# Window Handle Functions
+######
 
 
 def close_all_additional_windows(self):
@@ -90,6 +106,15 @@ def close_all_additional_windows(self):
             driver.switch_to.window(driver.window_handles[-1])
             driver.close()
     driver.switch_to.window(driver.window_handles[0])
+
+
+def wait_for_handle_to_load_and_switch(self, handle_index, timeout):
+    driver = self.driver
+    count = 0
+    while ((len(driver.window_handles) <= handle_index) and count <= timeout):
+        count = count + 1
+        time.sleep(1)
+    driver.switch_to_window(driver.window_handles[handle_index])
 
 
 def close_alert(self):
@@ -103,7 +128,7 @@ def close_alert(self):
         print "No alert."
 
 
-def wait_for_popup_window(self, expected_num_windows, timeout):
+def wait_for_popup_window(self, expected_num_windows, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     new_window_present = wait.until(
@@ -111,6 +136,7 @@ def wait_for_popup_window(self, expected_num_windows, timeout):
     return alert_visible
 
 
+# depricated
 def wait_for_url(self, url, timeout=globaldata.TIMEOUT):
     driver = self.driver
     found = True
@@ -129,12 +155,16 @@ def wait_for_url(self, url, timeout=globaldata.TIMEOUT):
             break
     return found
 
+######
+# Page Element Functions
+######
+
 
 def check_if_element_clickable(self, by, locator):
     return wait_for_element_clickable(self, by, locator, 1)
 
 
-def wait_for_element_clickable(self, by, locator, timeout):
+def wait_for_element_clickable(self, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     by = get_by(by)
@@ -146,7 +176,7 @@ def wait_for_element_clickable(self, by, locator, timeout):
     return clickable
 
 
-def wait_for_element_and_click(self, by, locator, timeout):
+def wait_for_element_and_click(self, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     clickable = wait_for_element_clickable(self, by, locator, timeout)
     try:
@@ -157,7 +187,7 @@ def wait_for_element_and_click(self, by, locator, timeout):
         return e
 
 
-def wait_for_element_text_to_equal(self, by, locator, text_to_equal, timeout):
+def wait_for_element_text_to_equal(self, by, locator, text_to_equal, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     by = get_by(by)
@@ -169,7 +199,7 @@ def wait_for_element_text_to_equal(self, by, locator, text_to_equal, timeout):
     return text_equal
 
 
-def wait_for_element_text_not_null(self, by, locator, timeout):
+def wait_for_element_text_not_null(self, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     by = get_by(by)
@@ -181,7 +211,7 @@ def wait_for_element_text_not_null(self, by, locator, timeout):
     return element_not_null
 
 
-def wait_for_element_text_to_contain(self, by, locator, text_to_contain, timeout):
+def wait_for_element_text_to_contain(self, by, locator, text_to_contain, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     by = get_by(by)
@@ -203,7 +233,7 @@ def check_if_element_not_present(self, by, locator):
     return wait_for_element_not_present(self, by, locator, timeout)
 
 
-def wait_for_element_present(self, by, locator, timeout):
+def wait_for_element_present(self, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     by = get_by(by)
@@ -214,7 +244,7 @@ def wait_for_element_present(self, by, locator, timeout):
     return present
 
 
-def wait_for_element_not_present(self, element, timeout):
+def wait_for_element_not_present(self, element, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     try:
@@ -234,7 +264,7 @@ def check_if_element_not_visible(self, by, locator):
     return wait_for_element_not_visible(self, by, locator, timeout)
 
 
-def wait_for_element_visible(self, by, locator, timeout):
+def wait_for_element_visible(self, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
 
@@ -245,7 +275,7 @@ def wait_for_element_visible(self, by, locator, timeout):
     return visible
 
 
-def wait_for_element_not_visible(self, by, locator, timeout):
+def wait_for_element_not_visible(self, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
 
@@ -256,8 +286,8 @@ def wait_for_element_not_visible(self, by, locator, timeout):
     return not_visible
 
 
-# Iframe Operations
-def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout):
+# needed for adminBeta testing
+def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     assert wait_for_element_visible(self, globaldata.ID, iframe_id, globaldata.TIMEOUTSHORT), "iframe not present in page"
     driver.switch_to.frame(iframe_id)
@@ -276,7 +306,7 @@ def wait_for_element_in_iframe_and_click(self, iframe_id, by, locator, timeout):
         element = wait_for_element_clickable(self, by, locator, timeout)
         if bool(element):
             element.click()
-            clicked= True
+            clicked = True
         else:
             clicked = False
     finally:
@@ -284,7 +314,7 @@ def wait_for_element_in_iframe_and_click(self, iframe_id, by, locator, timeout):
     return clicked
 
 
-def wait_for_child_element_visible(self, parent_element, by, locator, timeout):
+def wait_for_child_element_visible(self, parent_element, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     by = get_by(by)
@@ -296,7 +326,7 @@ def wait_for_child_element_visible(self, parent_element, by, locator, timeout):
     return visible
 
 
-def check_if_child_element_visible(self, parent_element, by, locator, timeout):
+def check_if_child_element_visible(self, parent_element, by, locator, timeout=globaldata.TIMEOUTSHORT):
     return wait_for_child_element_visible(self, parent_element, by, locator, 1)
 
 
@@ -351,7 +381,7 @@ def wait_for_script_runnable(self, script, **kwargs):
     return passed
 
 
-def poll_until(self, script, condition, timeout):
+def poll_until(self, script, condition, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     first_time = time.time()
     last_time = first_time
