@@ -334,25 +334,6 @@ def wait_for_overlay(self):
 
 
 # Depricated
-def wait_for_url(self, url, timeout=globaldata.TIMEOUTSHORT):
-    driver = self.driver
-    found = True
-    first_time = time.time()
-    last_time = first_time
-    current_url = ""
-
-    while (url not in current_url):
-        try:
-            current_url = driver.current_url
-        except Exception, e:
-            current_url = ""
-        new_time = time.time()
-        if new_time - last_time > timeout:
-            found = False
-            break
-    return found
-
-
 def check_script(self, script):
     driver = self.driver
     try:
