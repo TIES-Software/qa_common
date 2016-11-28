@@ -117,17 +117,6 @@ def wait_for_handle_to_load_and_switch(self, handle_index, timeout=globaldata.TI
     driver.switch_to_window(driver.window_handles[handle_index])
 
 
-def close_alert(self):
-    driver = self.driver
-    try:
-        WebDriverWait(driver, 3).until(EC.alert_is_present())
-
-        alert = driver.switch_to_alert()
-        alert.accept()
-    except TimeoutException:
-        print "No alert."
-
-
 def wait_for_popup_window(self, expected_num_windows, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
