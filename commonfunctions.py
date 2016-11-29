@@ -315,14 +315,6 @@ def wait_for_alert(self):
         return False
 
 
-# Migrate to Feepay common
-def wait_for_overlay(self):
-    driver = self.driver
-    script = "return document.getElementsByClassName('ui-widget-overlay').length"
-    if (poll_until(self, script, "0", globaldata.TIMEOUTSHORT) is False):
-        print("Script overlay never completed loading!")
-
-
 # Depricated
 def check_script(self, script):
     driver = self.driver
