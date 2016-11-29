@@ -304,13 +304,14 @@ def check_if_child_element_visible(self, parent_element, by, locator, timeout=gl
     return wait_for_child_element_visible(self, parent_element, by, locator, 1)
 
 
-def wait_for_popup(self):
+def wait_for_alert(self):
     driver = self.driver
     try:
-        popup_found = WebDriverWait(driver, globaldata.TIMEOUTSHORT).until(EC.alert_is_present())
-        if popup_found:
-            return popup_found
-    except Exception, e:
+        alert = WebDriverWait(driver, globaldata.TIMEOUTSHORT).until(EC.alert_is_present())
+        if bool(alert):
+            return alert
+    except Exception as e:
+        print(e)
         return False
 
 
