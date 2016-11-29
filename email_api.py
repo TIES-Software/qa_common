@@ -6,11 +6,9 @@ import glob
 import imaplib
 import email
 import time
-
 import globaldata
 import commonfunctions as cf
 from pageobjectsfrontend import checkout
-
 
 
 #Email variables
@@ -110,7 +108,7 @@ def validate_email(mail, validations):
         mail.select("inbox")
         result, email_data = mail.search(None, "ALL")
         ids = email_data[0]
-        if  new_time - last_time > globaldata.TIMEOUTLONG:
+        if new_time - last_time > globaldata.TIMEOUTLONG:
             failed = True
             failure = failure + "Email not received within " + str(globaldata.TIMEOUTLONG) + " seconds.\n"
             print("FAILURE: Email not received within " + str(globaldata.TIMEOUTLONG) + " seconds.")
@@ -126,8 +124,6 @@ def validate_email(mail, validations):
         if email_message['Subject'] != subject_validation:
             #print("SUCCESS: Validated email subject is '" + subject_validation + "'")
         #else:
-            failed = True
-            failure = failure + "Email subject was not '" + subject_validation + "'.\n"
             print("FAILURE: Email subject was not '" + subject_validation + "'.")
             return False
 
@@ -139,7 +135,6 @@ def validate_email(mail, validations):
             # print("SUCCESS: Validated email from is '" + email_from + "'")
             next
         else:
-            failure = failure + "Email from was not '" + email_from + "'.\n"
             print("FAILURE: Email from was not '" + email_from + "'.")
             return False
 
@@ -151,18 +146,13 @@ def validate_email(mail, validations):
                     # print("SUCCESS: Validated email body contained '" + validation + "'.")
                     next
                 else:
-                    failed = True
-                    failure = failure + "Email body did not contain '" + validation + ".\n"
                     print("FAILURE: Email body did not contain '" + validation + ".")
                     return False
 
         except Exception, e:
-            failed = True
-            failure = failure + "Exception in getting payload for '"
             return False
 
     return True
-
 
 
 def close_email(mail):
