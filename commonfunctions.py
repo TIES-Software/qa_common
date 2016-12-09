@@ -198,9 +198,9 @@ def check_if_element_present(self, by, locator):
     return wait_for_element_present(self, by, locator, timeout)
 
 
-def check_if_element_not_present(self, by, locator):
+def check_if_element_not_present(self, element):
     timeout = 1
-    return wait_for_element_not_present(self, by, locator, timeout)
+    return wait_for_element_not_present(self, element, timeout)
 
 
 def wait_for_element_present(self, by, locator, timeout=globaldata.TIMEOUTSHORT):
