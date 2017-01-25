@@ -407,3 +407,34 @@ def wait_for_element(self, by, what, **kwargs):
             driver.find_element(loc_type, what).click()
 
     return found
+
+def get_checkbox_attribute(self, element):
+
+    try:
+        check_box_value = element.get_attribute('checked')
+        return check_box_value
+    except StaleElementReferenceException, InvalidElementStateException:
+        return False
+
+def check_checkbox(self, element, desired_state = 'checked'):
+
+    element.click()
+    try:
+        if element.get_attribute('checked') == 'checked':
+            return True
+        else:
+            return False
+    except StaleElementReferenceException, InvalidElementStateException:
+        assert isinstance (element, bool), 'Element provided is not valid type'
+
+def uncheck_checkbox(self, element, desired_state = 'not checked'):
+
+    element.click()
+    try:
+        verify_not_checked = element.get_attribute('checked')
+        if verify_not_checked == '':
+            return True
+        else:
+            return False
+    except StaleElementReferenceException, InvalidElementStateException:
+        assert isinstance (element, bool), 'Element provided is not valid type'
