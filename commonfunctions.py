@@ -274,7 +274,7 @@ def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout=glo
 
 def wait_for_element_in_iframe_and_click(self, iframe_id, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
-    assert wait_for_element_visible(self, globaldata.ID, iframe_id, timeout), "iframe not present in page"
+    assert wait_for_element_visible(self, globaldata.ID, iframe_id, timeout), "iframe '" + iframe_id + "' not present in page"
     driver.switch_to.frame(iframe_id)
     try:
         element = wait_for_element_clickable(self, by, locator, timeout)
