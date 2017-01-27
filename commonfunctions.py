@@ -297,17 +297,10 @@ def check_if_child_element_visible(self, parent_element, by, locator, timeout=gl
     return wait_for_child_element_visible(self, parent_element, by, locator, 1)
 
 
-<<<<<<< HEAD
-def wait_for_alert(self):
-    driver = self.driver
-    try:
-        alert = WebDriverWait(driver, globaldata.TIMEOUTSHORT).until(EC.alert_is_present())
-=======
 def wait_for_alert(self, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     try:
         alert = WebDriverWait(driver, timeout).until(EC.alert_is_present())
->>>>>>> a7d48358e913be3c9136fe03d3c325150858b96d
         if bool(alert):
             return alert
     except Exception as e:
