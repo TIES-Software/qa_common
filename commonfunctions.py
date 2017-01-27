@@ -1,6 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import *
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -11,12 +10,6 @@ import datetime
 import string
 import random
 import globaldata
-
-
-# PAGE ELEMENTS
-TAG_HEADER = "h1"
-ID_CONTAINER = "Container"
-ID_IFRAME = "iFrameId"
 
 
 # FUNCTIONS
@@ -198,9 +191,9 @@ def check_if_element_present(self, by, locator):
     return wait_for_element_present(self, by, locator, timeout)
 
 
-def check_if_element_not_present(self, by, locator):
+def check_if_element_not_present(self, element):
     timeout = 1
-    return wait_for_element_not_present(self, by, locator, timeout)
+    return wait_for_element_not_present(self, element, timeout)
 
 
 def wait_for_element_present(self, by, locator, timeout=globaldata.TIMEOUTSHORT):
