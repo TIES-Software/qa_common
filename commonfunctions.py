@@ -1,6 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import *
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -11,12 +10,6 @@ import datetime
 import string
 import random
 import globaldata
-
-
-# PAGE ELEMENTS
-TAG_HEADER = "h1"
-ID_CONTAINER = "Container"
-ID_IFRAME = "iFrameId"
 
 
 # FUNCTIONS
@@ -198,9 +191,9 @@ def check_if_element_present(self, by, locator):
     return wait_for_element_present(self, by, locator, timeout)
 
 
-def check_if_element_not_present(self, by, locator):
+def check_if_element_not_present(self, element):
     timeout = 1
-    return wait_for_element_not_present(self, by, locator, timeout)
+    return wait_for_element_not_present(self, element, timeout)
 
 
 def wait_for_element_present(self, by, locator, timeout=globaldata.TIMEOUTSHORT):
@@ -263,7 +256,7 @@ def wait_for_element_not_visible(self, by, locator, timeout=globaldata.TIMEOUTSH
 # needed for adminBeta testing
 def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
-    assert wait_for_element_visible(self, globaldata.ID, iframe_id, globaldata.TIMEOUTSHORT), "iframe not present in page"
+    assert wait_for_element_visible(self, globaldata.ID, iframe_id, timeout), "iframe '" + iframe_id + "' not present in page"
     driver.switch_to.frame(iframe_id)
     try:
         visible = wait_for_element_visible(self, by, locator, timeout)
@@ -274,7 +267,7 @@ def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout=glo
 
 def wait_for_element_in_iframe_and_click(self, iframe_id, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
-    assert wait_for_element_visible(self, globaldata.ID, iframe_id, timeout), "iframe not present in page"
+    assert wait_for_element_visible(self, globaldata.ID, iframe_id, timeout), "iframe '" + iframe_id + "' not present in page"
     driver.switch_to.frame(iframe_id)
     try:
         element = wait_for_element_clickable(self, by, locator, timeout)
@@ -304,10 +297,17 @@ def check_if_child_element_visible(self, parent_element, by, locator, timeout=gl
     return wait_for_child_element_visible(self, parent_element, by, locator, 1)
 
 
+<<<<<<< HEAD
 def wait_for_alert(self):
     driver = self.driver
     try:
         alert = WebDriverWait(driver, globaldata.TIMEOUTSHORT).until(EC.alert_is_present())
+=======
+def wait_for_alert(self, timeout=globaldata.TIMEOUTSHORT):
+    driver = self.driver
+    try:
+        alert = WebDriverWait(driver, timeout).until(EC.alert_is_present())
+>>>>>>> a7d48358e913be3c9136fe03d3c325150858b96d
         if bool(alert):
             return alert
     except Exception as e:
