@@ -416,25 +416,11 @@ def get_checkbox_attribute(self, element):
     except StaleElementReferenceException, InvalidElementStateException:
         return False
 
-def check_checkbox(self, element, desired_state = 'checked'):
+def set_checkbox(self, element, desired_state = 'checked'):
 
-    element.click()
     try:
-        if element.get_attribute('checked') == 'checked':
-            return True
-        else:
-            return False
+        if element.get_attribute('checked') != desired_state:
+            element.click()
     except StaleElementReferenceException, InvalidElementStateException:
-        assert isinstance (element, bool), 'Element provided is not valid type'
-
-def uncheck_checkbox(self, element, desired_state = 'not checked'):
-
-    element.click()
-    try:
-        verify_not_checked = element.get_attribute('checked')
-        if verify_not_checked == '':
-            return True
-        else:
-            return False
-    except StaleElementReferenceException, InvalidElementStateException:
-        assert isinstance (element, bool), 'Element provided is not valid type'
+        assert isinstance (element, webdriver.remote.webelement.WebElement), 'Element provided is not valid type'
+    return True
