@@ -409,6 +409,7 @@ def wait_for_element(self, by, what, **kwargs):
     return found
 
 def get_checkbox_attribute(self, element):
+    assert isinstance (element, webdriver.remote.webelement.WebElement), 'Element for checkbox field type was not provided'
 
     try:
         check_box_value = element.get_attribute('checked')
@@ -417,6 +418,7 @@ def get_checkbox_attribute(self, element):
         return False
 
 def set_checkbox(self, element, desired_state = 'checked'):
+    assert isinstance (element, webdriver.remote.webelement.WebElement), 'Element for checkbox field type was not provided'
 
     try:
         if element.get_attribute('checked') != desired_state:
@@ -424,3 +426,25 @@ def set_checkbox(self, element, desired_state = 'checked'):
     except StaleElementReferenceException, InvalidElementStateException:
         assert isinstance (element, webdriver.remote.webelement.WebElement), 'Element provided is not valid type'
     return True
+
+
+def edit_field_type_text(self, element = False, data = False):
+    assert isinstance (element, webdriver.remote.webelement.WebElement), 'Element for text field type was not provided'
+    assert isinstance (data, str), 'Data to enter into text field was not provided'
+
+    input_element.clear()
+    input_element.send_keys(data)
+    return element_to_verify.get_attribute('value')
+
+def edit_field_type_select(self, element = False, field_name = False, data = False):
+    assert isinstance (element, webdriver.remote.webelement.WebElement), 'Element for select field type was not provided'
+    assert isinstance (field, str), 'Field name to select data was not provided'
+    assert isinstance (data, str), 'Data to enter into text field was not provided'
+
+    try:
+        Select(select_element.find_element_by_id(field_name)).select_by_visible_text(data)
+        select_element = cf.wait_for_element_present(self, globaldata.CSS, 'select[id=\"'+field_name+'\"]', globaldata.TIMEOUTLONG)
+    except (NoSuchElementException, ElementNotVisibleException, StaleElementReferenceException, InvalidElementStateException):
+        print '\nData ' + str(data) + ' is not an available selection or the select field is in an Invalid/stale element state'
+        return False
+    return select_element.get_attribute('value')
