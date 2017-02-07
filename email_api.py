@@ -11,50 +11,10 @@ import commonfunctions as cf
 from pageobjectsfrontend import checkout
 
 
-#Email variables
-EMAIL_NOREPLY = "noreply@feepay.com"
-EMAIL_SUBJECT = "FeePay Receipt"
-CC = "Credit card"
-CHECKING = "Checking"
-SAVINGS = "Savings"
-
-
-
-def build_validation_array(customer, conf_num):
-
-    items = customer.cart_items
-    total = checkout.get_total(items)
-    fullname = customer.fullname
-    payment_type = customer.payment_type
-    account = customer.account
-    ccnum = customer.ccnum
-
-    validation = []
-    validation.append("Total: " + total)
-    validation.append("Name: " + fullname)
-    validation.append(conf_num)
-
-    if payment_type == CHECKING:
-        validation.append("Method: Checking ****" + account[-4:])
-    elif payment_type == SAVINGS:
-        validation.append("Method: Savings ****" + account[-4:])
-    else:
-        cc_type = checkout.get_cc_type(ccnum)
-        validation.append("Method: " + cc_type + " ****" + ccnum[-4:])
-
-    for item in items:
-        validation.append("What: " + item[0] + "\r\nAmount: " + item[1])
-
-    return validation
-
-
-
-
 def login(login, password):
     mail = imaplib.IMAP4_SSL('imap.gmail.com')
     mail.login(login, password)
     return mail
-
 
 
 def clean_inbox(mail):
@@ -67,7 +27,7 @@ def clean_inbox(mail):
         mail.store(num, '+FLAGS', '\\Deleted')
     mail.expunge()
 
-    #Looping until email clean
+    # Looping until email clean
     ids = email_data[0]
     first_time = time.time()
     last_time = first_time
@@ -76,7 +36,7 @@ def clean_inbox(mail):
         mail.select("inbox")
         result, email_data = mail.search(None, "ALL")
         ids = email_data[0]
-        if  new_time - last_time > globaldata.TIMEOUT:
+        if new_time - last_time > globaldata.TIMEOUT:
             failed = True
             failure = failure + "Email not expunged within " + str(globaldata.TIMEOUT) + " seconds.\n"
             print("FAILURE: Email not expunged within " + str(globaldata.TIMEOUT) + " seconds.")
@@ -89,13 +49,9 @@ def clean_inbox(mail):
     return [failed, failure]
 
 
-
-def validate_email(mail, validations):
+def validate_email(mail, subject, email_from, validations):
 
     failed = False
-    failure = ""
-    subject_validation = EMAIL_SUBJECT
-    email_from = EMAIL_NOREPLY
     success = 0
 
     mail.select("inbox")
@@ -110,7 +66,6 @@ def validate_email(mail, validations):
         ids = email_data[0]
         if new_time - last_time > globaldata.TIMEOUTLONG:
             failed = True
-            failure = failure + "Email not received within " + str(globaldata.TIMEOUTLONG) + " seconds.\n"
             print("FAILURE: Email not received within " + str(globaldata.TIMEOUTLONG) + " seconds.")
             return False
 
@@ -121,15 +76,13 @@ def validate_email(mail, validations):
         raw_email = email_data[0][1]
         email_message = email.message_from_string(raw_email)
 
-        if email_message['Subject'] != subject_validation:
-            #print("SUCCESS: Validated email subject is '" + subject_validation + "'")
-        #else:
-            print("FAILURE: Email subject was not '" + subject_validation + "'.")
+        if email_message['Subject'] != subject:
+            print("FAILURE: Email subject was not '" + subject + "'.")
             return False
 
-        #get the from address from the received email
+        # get the from address from the received email
         received_from = email.utils.parseaddr(email_message['From'])
-        #parseaddr returns a tuple <name, email>
+        # parseaddr returns a tuple <name, email>
 
         if received_from[1] == email_from:
             # print("SUCCESS: Validated email from is '" + email_from + "'")
@@ -140,7 +93,7 @@ def validate_email(mail, validations):
 
         try:
             body_text = email_message.get_payload()
-            #Check each validation passed in
+            # Check each validation passed in
             for validation in validations:
                 if validation in body_text:
                     # print("SUCCESS: Validated email body contained '" + validation + "'.")
