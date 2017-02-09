@@ -403,7 +403,7 @@ def wait_for_element(self, by, what, **kwargs):
     return found
 
 
-def get_checkbox_attribute(self, element):
+def get_checkbox_state(self, element):
     assert isinstance(element, webdriver.remote.webelement.WebElement), 'Element for checkbox field type was not provided'
 
     try:
@@ -414,28 +414,29 @@ def get_checkbox_attribute(self, element):
 
 
 def set_checkbox(self, element, desired_state='checked'):
-    assert isinstance(element, webdriver.remote.webelement.WebElement), 'Element for checkbox field type was not provided'
+    assert isinstance(element, webdriver.remote.webelement.WebElement), 'The element provided must be a webelement'
 
     try:
-        if element.get_attribute('checked') != desired_state:
+        if get_checkbox_state(self, element=element) != desired_state:
             element.click()
     except StaleElementReferenceException, InvalidElementStateException:
-        assert isinstance(element, webdriver.remote.webelement.WebElement), 'Element provided is not valid type'
+        print 'Not able to click on the checkbox'
+        return False
     return True
 
 
-def edit_field_type_text(self, element=False, data=False):
-    assert isinstance(element, webdriver.remote.webelement.WebElement), 'Element for text field type was not provided'
-    assert isinstance(data, str), 'Data to enter into text field was not provided'
+def edit_field_type_text(self, element, data):
+    assert isinstance(element, webdriver.remote.webelement.WebElement), 'The element provided must be a webelement'
+    assert isinstance(data, str), 'Data provided must be a string'
     element.clear()
     element.send_keys(data)
     return element.get_attribute('value')
 
 
-def edit_field_type_select(self, element=False, field_name=False, data=False):
-    assert isinstance(element, webdriver.remote.webelement.WebElement), 'Element for select field type was not provided'
-    assert isinstance(field_name, str), 'Field name to select data was not provided'
-    assert isinstance(data, str), 'Data to enter into text field was not provided'
+def edit_field_type_select(self, element, field_name, data):
+    assert isinstance(element, webdriver.remote.webelement.WebElement), 'The element provided must be a webelement'
+    assert isinstance(field_name, str), 'Field provided must be a string'
+    assert isinstance(data, str), 'Data provided must be a string'
 
     try:
         Select(element.find_element_by_id(field_name)).select_by_visible_text(data)
