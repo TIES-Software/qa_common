@@ -1,9 +1,10 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.common.exceptions import *
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import Select
 from common import custom_EC
 import time
 import datetime
@@ -400,3 +401,47 @@ def wait_for_element(self, by, what, **kwargs):
             driver.find_element(loc_type, what).click()
 
     return found
+
+
+def get_checkbox_state(self, element):
+    assert isinstance(element, webdriver.remote.webelement.WebElement), 'Element for checkbox field type was not provided'
+
+    try:
+        check_box_value = element.get_attribute('checked')
+        return check_box_value
+    except StaleElementReferenceException, InvalidElementStateException:
+        return False
+
+
+def set_checkbox(self, element, desired_state='checked'):
+    assert isinstance(element, webdriver.remote.webelement.WebElement), 'The element provided must be a webelement'
+
+    try:
+        if get_checkbox_state(self, element=element) != desired_state:
+            element.click()
+    except StaleElementReferenceException, InvalidElementStateException:
+        print 'Not able to click on the checkbox'
+        return False
+    return True
+
+
+def edit_field_type_text(self, element, data):
+    assert isinstance(element, webdriver.remote.webelement.WebElement), 'The element provided must be a webelement'
+    assert isinstance(data, str), 'Data provided must be a string'
+    element.clear()
+    element.send_keys(data)
+    return element.get_attribute('value')
+
+
+def edit_field_type_select(self, element, field_name, data):
+    assert isinstance(element, webdriver.remote.webelement.WebElement), 'The element provided must be a webelement'
+    assert isinstance(field_name, str), 'Field provided must be a string'
+    assert isinstance(data, str), 'Data provided must be a string'
+
+    try:
+        Select(element.find_element_by_id(field_name)).select_by_visible_text(data)
+        select_element = wait_for_element_present(self, globaldata.CSS, 'select[id=\"' + field_name + '\"]', globaldata.TIMEOUTLONG)
+    except (NoSuchElementException, ElementNotVisibleException, StaleElementReferenceException, InvalidElementStateException):
+        print '\nData ' + data + ' is not an available selection or the select field is in an Invalid/stale element state'
+        return False
+    return select_element.get_attribute('value')
