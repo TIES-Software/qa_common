@@ -28,7 +28,7 @@ class BaseTestCase (unittest.TestCase):
         cls.driver.quit()
 
     @classmethod
-    def getDriver(cls):
+        def getDriver(cls):
         driver = cf.get_driver(cls.base_browser)
         cls.driver = driver
         return driver
