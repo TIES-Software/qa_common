@@ -4,7 +4,7 @@ import os
 REPORT_DIR = os.getcwd() + "/reports/"
 SCREENSHOT_DIR = os.getcwd() + "/reports/screenshots/"
 CHROME_DRIVER_DIR = os.environ["CHROME_DRIVER_DIR"]
-FIREFOX_BINARY_PATH = os.environ["FIREFOX_BINARY_PATH"]
+FIREFOX_DRIVER_DIR = os.environ["FIREFOX_DRIVER_DIR"]
 IE_DRIVER_DIR = "/Users/Briel/qa/common/IEDriverServer.exe"
 SELENIUM = "selenium"
 
