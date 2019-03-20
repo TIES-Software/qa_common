@@ -1,2 +1,2 @@
-# qa_euronymo_common
-Common code for euronymo automated tests.
+# qa_common
+Common code for Sourcewell Technology automated tests.
