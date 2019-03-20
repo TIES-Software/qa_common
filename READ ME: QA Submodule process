@@ -24,3 +24,9 @@ git pull --recurse-submodules
 
 MORE RESCOURCES ABOUT SUBMODULES:
 https://git-scm.com/book/en/v2/Git-Tools-Submodules
+
+Troubleshoot:
+if you run into: fatal: Pathspec '<file>' is in submodule '<path>' when adding commits.
+git rm -rf --cached <path>/
+git add <path>/
+then try commiting
