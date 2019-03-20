@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.common.exceptions import *
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
@@ -18,17 +20,47 @@ def get_driver(browser):
     if (browser == 'chrome'):
         path_to_chrome_driver = globaldata.CHROME_DRIVER_DIR
         options = webdriver.ChromeOptions()
+        #options.add_argument("--start-maximized")
+        #size of a 13 inch desktop screen
+        #options.add_argument("--window-size=1280,1500")
         options.add_argument("--test-type")
         options.add_argument("--disable-popup-blocking")
+        options.add_argument('--ignore-certificate-errors')
         driver = webdriver.Chrome(executable_path=path_to_chrome_driver, chrome_options=options)
 
-    else:
-        if (browser != 'firefox'):
-            print ("Unable to create driver for " + browser + ". Using Firefox instead.")
+    elif (browser == 'chrome_headless'):
+        path_to_chrome_driver = globaldata.CHROME_DRIVER_DIR
+        options = webdriver.ChromeOptions()
+        options.add_argument("--test-type")
+        options.add_argument("--disable-popup-blocking")
+        options.add_argument("--headless")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--ignore-certificate-errors")
+        driver = webdriver.Chrome(executable_path=path_to_chrome_driver, chrome_options=options)
+
+    elif (browser == 'firefox'):
+        path_to_geckodriver = globaldata.FIREFOX_DRIVER_DIR
+        options = FirefoxOptions()
         caps = DesiredCapabilities.FIREFOX
         caps["marionette"] = True
-        caps["binary"] = globaldata.FIREFOX_BINARY_PATH
-        driver = webdriver.Firefox(capabilities=caps)
+        profile = webdriver.FirefoxProfile()
+        profile.accept_untrusted_certs = True
+        driver = webdriver.Firefox(executable_path=path_to_geckodriver, capabilities=caps, firefox_options=options, firefox_profile=profile)
+
+    elif (browser == 'firefox_headless'):
+        path_to_geckodriver = globaldata.FIREFOX_DRIVER_DIR
+        options = FirefoxOptions()
+        options.add_argument('--headless')
+
+        caps = DesiredCapabilities.FIREFOX
+        caps["marionette"] = True
+        profile = webdriver.FirefoxProfile()
+        profile.accept_untrusted_certs = True
+        driver = webdriver.Firefox(executable_path=path_to_geckodriver, capabilities=caps, firefox_options=options, firefox_profile=profile)
+
+    else:
+        print browser + "is not an option"
 
     return driver
 
@@ -114,9 +146,29 @@ def wait_for_handle_to_load_and_switch(self, handle_index, timeout=globaldata.TI
 def wait_for_popup_window(self, expected_num_windows, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
-    new_window_present = wait.until(
-        lambda driver: len(driver.window_handles) == expected_num_windows)
-    return alert_visible
+    if not wait.until(lambda driver: len(driver.window_handles) == expected_num_windows):
+        print "Expected number of " + expected_num_windows + " windows to display in " + timeout + " seconds"
+        return False
+    else:
+        return True
+
+def wait_for_url(self, url, timeout=globaldata.TIMEOUT):
+    driver = self.driver
+    found = True
+    first_time = time.time()
+    last_time = first_time
+    current_url = ""
+
+    while (url not in current_url):
+        try:
+            current_url = driver.current_url
+        except Exception, e:
+            current_url = ""
+            new_time = time.time()
+            if new_time - last_time > timeout:
+                found = False
+                break
+        return found
 
 
 ######
@@ -143,6 +195,7 @@ def wait_for_element_clickable(self, by, locator, timeout=globaldata.TIMEOUTSHOR
 def wait_for_element_and_click(self, by, locator, timeout=globaldata.TIMEOUTSHORT):
     driver = self.driver
     clickable = wait_for_element_clickable(self, by, locator, timeout)
+
     try:
         clickable.click()
         return True
