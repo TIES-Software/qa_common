@@ -5,7 +5,7 @@ Steps to add submodules:
 2) clone qa_common locally
 3) unify files across different projects into qa_common
 4) PR and merge changes into qa_common
-5) Delete corresponding folders in porjects
+5) Delete corresponding folders in projects
 6) CD into project 
 7) git submodule add https://github.com/TIES-Software/qa_common common
 
