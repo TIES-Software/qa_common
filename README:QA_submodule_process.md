@@ -16,12 +16,13 @@ git submodule update --remote qa_common
 
 Making changes to submodule:
 CD into directory
-git checkout <branch name>
+git checkout -b <branch name>
 git submodule update --remote --merge
 
 
 Pushing change to submodule:
 (from submodule directory)
+git status
 git add
 git commit -a -m "submodule message"
 cd .. (back to main project folder)
