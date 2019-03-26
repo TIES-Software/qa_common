@@ -1,6 +1,6 @@
-##PROCESS FOR SUBMODULING FOLDER/FILES##
+## PROCESS FOR SUBMODULING FOLDER/FILES
 
-###Steps to add qa_common as submodule:###
+### Steps to add qa_common as submodule:
 1) fork qa_common
 2) clone qa_common locally
 3) unify common folders across different projects into qa_common
@@ -21,21 +21,21 @@ sys.path.append(abspath("%s/../../%s" % (os.path.dirname(os.path.realpath(__file
   *may need to modify directory path in above line depending on how nested file runner is*
 
 
-###When pulling down changes:###
+### When pulling down changes:
 
 git checkout master
 
 git pull master
 
 
-###After making changes to submodule:###
+### After making changes to submodule:
 
 CD into submodule directory
 
 git checkout -b <branch name>
 
 
-###Pushing change to submodule:###
+### Pushing change to submodule:
 
 (from submodule directory using branch)
 
@@ -48,7 +48,7 @@ git commit -m "message"
 git push
 
 
-###MORE RESCOURCES ABOUT SUBMODULES:###
+### MORE RESCOURCES ABOUT SUBMODULES:
 
 https://git-scm.com/book/en/v2/Git-Tools-Submodules
 
