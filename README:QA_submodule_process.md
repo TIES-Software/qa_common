@@ -6,28 +6,33 @@ Steps to add qa_common as submodule:
 3) unify common folders across different projects into qa_common
 4) PR and merge changes into qa_common
 5) Delete corresponding folder in project
-6) CD to project
-7) git submodule add https://github.com/TIES-Software/qa_common common
+6) CD to project repo
+7) git submodule add https://github.com/TIES-Software/qa_common
+8) add the following to test runner (i.e. run_tests.py or enironment.py):
+  import os
+  from os.path import abspath
+  import sys
+  sys.path.append(abspath("%s/../../%s" % (os.path.dirname(os.path.realpath(__file__)), "qa_common")))
+
+  *may need to modify directory path in above line depending on how nested file runner is*
 
 
 When pulling down changes:
-git submodule update --remote qa_common
+git checkout master
+git pull master
 
 
-Making changes to submodule:
-CD into directory
+After making changes to submodule:
+CD into submodule directory
 git checkout -b <branch name>
-git submodule update --remote --merge
 
 
 Pushing change to submodule:
-(from submodule directory)
+(from submodule directory using branch)
 git status
 git add
-git commit -a -m "submodule message"
-cd .. (back to main project folder)
-git comit -a -m "commiting submodule changes from main project"
-git push --recurse-submodules=check or on-demand
+git commit -m "message"
+git push
 
 
 MORE RESCOURCES ABOUT SUBMODULES:
