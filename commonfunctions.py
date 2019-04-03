@@ -111,13 +111,13 @@ def get_driver(browser, jenkins=""):
         profile.accept_untrusted_certs = True
         driver = webdriver.Firefox(executable_path=path_to_geckodriver, capabilities=caps, firefox_options=options, firefox_profile=profile)
 
-    elif 'frontend' in self.site or 'admin' in self.site:
+    elif ('frontend' or 'admin') in self.site:
         if 'beta' in browser:
             options.binary_location = browser_path[0]
         else:
             options.binary_location = browser_path[1]
     else:
-        print(browser + "is not an option")
+        print browser + "is not an option"
 
     window_size = driver.get_window_size()
     print('\nWindow size is ' + str(window_size))
@@ -146,8 +146,7 @@ def get_by(what):
     return by
 
 
-#def generate_id(size=8, chars=string.letters + string.digits):
-def generate_id(size=8, chars=string.ascii_letters + string.digits):
+def generate_id(size=8, chars=string.letters + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
@@ -277,7 +276,7 @@ def wait_for_popup_window(self, expected_num_windows, timeout=globaldata.TIMEOUT
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     if not wait.until(lambda driver: len(driver.window_handles) == expected_num_windows):
-        print("Expected number of " + expected_num_windows + " windows to display in " + timeout + " seconds")
+        print "Expected number of " + expected_num_windows + " windows to display in " + timeout + " seconds"
         return False
     else:
         return True
@@ -301,7 +300,7 @@ def wait_for_url(self, url, timeout=globaldata.TIMEOUT):
     while (url not in current_url):
         try:
             current_url = driver.current_url
-        except Exception as e:
+        except Exception, e:
             current_url = ""
             new_time = time.time()
             if new_time - last_time > timeout:
@@ -339,7 +338,7 @@ def wait_for_element_and_click(self, by, locator, timeout=globaldata.TIMEOUT):
         clickable.click()
         return True
     except Exception as e:
-        print('\n' + str(e))
+        print(e)
         return False
 
 
@@ -521,7 +520,7 @@ def wait_for_alert(self, timeout=globaldata.TIMEOUT):
         if bool(alert):
             return alert
     except Exception as e:
-        print('\n' + str(e))
+        print(e)
         return False
 
 
@@ -530,7 +529,7 @@ def check_script(self, script):
     driver = self.driver
     try:
         driver.execute_script(script)
-    except Exception as e:
+    except Exception, e:
         return False
     return True
 
@@ -626,7 +625,7 @@ def get_checkbox_state(self, element):
         check_box_value = element.get_attribute('checked')
         time.sleep(1)
         return check_box_value
-    except (StaleElementReferenceException, InvalidElementStateException):
+    except StaleElementReferenceException, InvalidElementStateException:
         return False
 
 
@@ -639,8 +638,8 @@ def set_checkbox(self, element, desired_state='checked'):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             element.click()
             time.sleep(.5)
-    except (StaleElementReferenceException, InvalidElementStateException):
-        print('Not able to click on the checkbox')
+    except StaleElementReferenceException, InvalidElementStateException:
+        print 'Not able to click on the checkbox'
         return False
     return True
 
@@ -662,7 +661,7 @@ def edit_field_type_select(self, element, field_name, data):
         Select(element.find_element_by_id(field_name)).select_by_visible_text(data)
         select_element = wait_for_element_present(self, globaldata.CSS, 'select[id=\"' + field_name + '\"]', globaldata.TIMEOUTLONG)
     except (NoSuchElementException, ElementNotVisibleException, StaleElementReferenceException, InvalidElementStateException):
-        print('\nData ' + data + ' is not an available selection or the select field is in an Invalid/stale element state')
+        print '\nData ' + data + ' is not an available selection or the select field is in an Invalid/stale element state'
         return False
     return select_element.get_attribute('value')
 
