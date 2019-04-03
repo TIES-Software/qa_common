@@ -1,10 +1,14 @@
 import platform
 import os
 
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
 REPORT_DIR = os.getcwd() + "/reports/"
 SCREENSHOT_DIR = os.getcwd() + "/reports/screenshots/"
 CHROME_DRIVER_DIR = os.environ["CHROME_DRIVER_DIR"]
 FIREFOX_DRIVER_DIR = os.environ["FIREFOX_DRIVER_DIR"]
+GECKO_DRIVER = os.environ["FIREFOX_DRIVER_DIR"]
+
 IE_DRIVER_DIR = "/Users/Briel/qa/common/IEDriverServer.exe"
 SELENIUM = "selenium"
 
@@ -46,12 +50,21 @@ CN = "CLASS_NAME"
 CSS = "CSS_SELECTOR"
 XPATH = "XPATH"
 
-TIMEOUT = 20
-TIMEOUTSHORT = 10
-TIMEOUTSHORTEST = 5
-TIMEOUTLONG = 50
-TIMEOUT_RETRY_INTERVAL = 0.1
-TRANSFORM_TRANSITION_TIME = 1
-LONG_TRANSITION_TIME = 2
+if 'feepay' in dir_path:
+    TIMEOUT = 4
+    TIMEOUTSHORT = 1
+    TIMEOUTSHORTEST = .25
+    TIMEOUTLONG = 8
+    TIMEOUT_RETRY_INTERVAL = 0.1
+    TRANSFORM_TRANSITION_TIME = 1
+    LONG_TRANSITION_TIME = 2
+else:
+    TIMEOUT = 20
+    TIMEOUTSHORT = 10
+    TIMEOUTSHORTEST = 5
+    TIMEOUTLONG = 50
+    TIMEOUT_RETRY_INTERVAL = 0.1
+    TRANSFORM_TRANSITION_TIME = 1
+    LONG_TRANSITION_TIME = 2
 
 FAILURE_MSG = "FAILED - The following verifications failed:\n"
