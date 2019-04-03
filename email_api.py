@@ -1,19 +1,23 @@
 import json
 import sys
-import urllib2
+#import urllib2
 import os
 import glob
 import imaplib
 import email
 import time
-import globaldata
-import commonfunctions as cf
+from common import (
+    globaldata,
+    commonfunctions as cf,
+)
 from pageobjectsfrontend import checkout
 
 
 def login(login, password):
     mail = imaplib.IMAP4_SSL('imap.gmail.com')
+    time.sleep(3)
     mail.login(login, password)
+    time.sleep(2)
     return mail
 
 
@@ -53,16 +57,18 @@ def validate_email(mail, subject, email_from, validations):
 
     failed = False
     success = 0
-
+    time.sleep(.5)
     mail.select("inbox")
     result, email_data = mail.search(None, "ALL")
     ids = email_data[0]
     first_time = time.time()
     last_time = first_time
+    time.sleep(.5)
     while len(ids) == 0:
         new_time = time.time()
         mail.select("inbox")
         result, email_data = mail.search(None, "ALL")
+        time.sleep(.5)
         ids = email_data[0]
         if new_time - last_time > globaldata.TIMEOUTLONG:
             failed = True
@@ -75,6 +81,7 @@ def validate_email(mail, subject, email_from, validations):
         result, email_data = mail.fetch(latest_email_id, "(RFC822)")
         raw_email = email_data[0][1]
         email_message = email.message_from_string(raw_email)
+        time.sleep(.5)
 
         if email_message['Subject'] != subject:
             print("FAILURE: Email subject was not '" + subject + "'.")
@@ -93,16 +100,18 @@ def validate_email(mail, subject, email_from, validations):
 
         try:
             body_text = email_message.get_payload()
+            time.sleep(1)
             # Check each validation passed in
             for validation in validations:
                 if validation in body_text:
+                    time.sleep(1)
                     # print("SUCCESS: Validated email body contained '" + validation + "'.")
                     next
                 else:
                     print("FAILURE: Email body did not contain '" + validation + ".")
                     return False
 
-        except Exception, e:
+        except Exception as e:
             return False
 
     return True
