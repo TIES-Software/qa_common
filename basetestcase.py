@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import TimeoutException
 import unittest
 import globaldata
-import httplib
+# import httplib
 import sys
 import base64
 import os
