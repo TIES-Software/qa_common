@@ -415,7 +415,7 @@ def check_if_element_visible(self, by, locator, timeout=globaldata.TIMEOUT):
         if wait_for_element_visible(self, by, locator, timeout):
             return True
         else:
-            print('Failed to find element visable with the locator of ' + locator)
+            print('Failed to find element visible with the locator of ' + locator)
     except Exception:
         print('something went wrong trying to find element')
         return False
