@@ -339,7 +339,7 @@ def wait_for_element_and_click(self, by, locator, timeout=globaldata.TIMEOUT):
         clickable.click()
         return True
     except Exception as e:
-        print(e)
+        print("unable to click on element" +locator, ste(e))
         return False
 
 
