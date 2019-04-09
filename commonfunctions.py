@@ -339,7 +339,7 @@ def wait_for_element_and_click(self, by, locator, timeout=globaldata.TIMEOUT):
         clickable.click()
         return True
     except Exception as e:
-        print('\n' + str(e))
+        print("unable to click on element" +locator, e)
         return False
 
 
@@ -414,10 +414,10 @@ def check_if_element_visible(self, by, locator, timeout=globaldata.TIMEOUT):
     try:
         if wait_for_element_visible(self, by, locator, timeout):
             return True
-        else:
-            print('Failed to find element visible with the locator of ' + locator)
-    except Exception:
-        print('something went wrong trying to find element')
+        #else:
+            #print('Failed to find element visible with the locator of ' + locator)
+    except Exception as e:
+        print('something went wrong trying to find element \n', e)
         return False
 
 
