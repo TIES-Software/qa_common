@@ -670,6 +670,7 @@ def edit_field_type_select(self, element, field_name, data):
 def start_of_school(self):
     return '07/01'
 
+
 def end_of_school(self):
     return '06/30'
 
