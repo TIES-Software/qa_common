@@ -33,7 +33,7 @@ git pull
 
 git checkout master
 
-git pull
+git pull origin master
 
 ### Pushing changes to submodule:
 
@@ -57,7 +57,7 @@ you should see qa_common(or common) has changes to be committed
 
 git checkout -b <branch>
 
-git add file
+git add <file>
 
 git commit -m "message"
 
