@@ -23,23 +23,25 @@ sys.path.append(abspath("%s/../../%s" % (os.path.dirname(os.path.realpath(__file
 
 ### When pulling down changes:
 
+(from submodule directory)
+
 git checkout master
 
-git pull master
+git pull
 
+(from project directory)
 
-### After making changes to submodule:
+git checkout master
 
-CD into submodule directory
+git pull
+
+### Pushing changes to submodule:
+
+(from submodule directory)
+
+git status (there should be changes to be PR'd)
 
 git checkout -b <branch name>
-
-
-### Pushing change to submodule:
-
-(from submodule directory using branch)
-
-git status
 
 git add
 
@@ -47,6 +49,19 @@ git commit -m "message"
 
 git push
 
+(then from project directory)
+
+git status
+
+you should see qa_common(or common) has changes to be committed
+
+git checkout -b <branch>
+
+git add file
+
+git commit -m "message"
+
+git push origin <branch>
 
 ### MORE RESCOURCES ABOUT SUBMODULES:
 
