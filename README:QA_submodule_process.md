@@ -33,7 +33,7 @@ git pull
 
 git checkout master
 
-git pull origin master
+git pull upstream master
 
 ### Pushing changes to submodule:
 
@@ -41,13 +41,13 @@ git pull origin master
 
 git status (there should be changes to be PR'd)
 
-git checkout -b <branch name>
+git checkout -b <branch>
 
-git add
+git add <changed file(s)>
 
 git commit -m "message"
 
-git push
+git push origin <branch>
 
 (then from project directory)
 
