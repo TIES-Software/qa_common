@@ -21,17 +21,17 @@ class BaseTestCase (unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        driver = cls.getDriver()
+        driver = cf.get_driver(cls.base_browser, cls.jenkins, cls.base_site)
+        cls.driver = driver
+        cf.driver_browser_info(driver)
+        return driver
 
     @classmethod
     def tearDownClass(cls):
         cls.driver.quit()
 
-    @classmethod
-    def getDriver(cls):
-        driver = cf.get_driver(cls.base_browser)
-        cls.driver = driver
-        return driver
+    # @classmethod
+    # def getDriver(cls):
 
     def set_test_status(self, failed, failure, **kwargs):
 

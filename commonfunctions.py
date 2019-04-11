@@ -7,18 +7,22 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
-import custom_EC
+
+from common import(
+    globaldata,
+    custom_EC
+)
+
 import time
 import datetime
 import string
 import random
-import globaldata
 import calendar
 import platform
 import itertools
 
-# FUNCTIONS
-def get_driver(browser, jenkins=""):
+
+def get_driver(browser, jenkins="", site=""):
     os_type = platform.system().lower()
     browser_path = os_browser_path(browser_type=browser)
 
@@ -57,11 +61,15 @@ def get_driver(browser, jenkins=""):
 
         options.add_experimental_option("useAutomationExtension", False)
 
-
         capabilities = DesiredCapabilities.CHROME
         capabilities['loggingPrefs'] = {'performance': 'ALL'}
         capabilities['acceptInsecureCerts'] = True
 
+        if 'frontend' in site or 'admin' in site:
+            if 'beta' in browser:
+                options.binary_location = browser_path[0]
+            else:
+                options.binary_location = browser_path[1]
 
         if os_type =='linux':
             output_dir='/tmp'
@@ -70,23 +78,29 @@ def get_driver(browser, jenkins=""):
         else:
             driver = webdriver.Chrome(executable_path=path_to_chrome_driver, chrome_options=options, desired_capabilities=capabilities)
 
-    # elif (browser == 'chrome_headless'):
-    #     path_to_chrome_driver = globaldata.CHROME_DRIVER_DIR
-    #     options = webdriver.ChromeOptions()
-    #     options.add_argument("--test-type")
-    #     options.add_argument("--disable-popup-blocking")
-    #     options.add_argument("--headless")
-    #     options.add_argument("--disable-gpu")
-    #     options.add_argument("--no-sandbox")
-    #     options.add_argument("--ignore-certificate-errors")
-    #
-    #     options.add_argument("--disable-infobars")
-    #
-    #     capabilities = DesiredCapabilities.CHROME
-    #     capabilities['loggingPrefs'] = {'performance': 'ALL'}
-    #     capabilities['acceptInsecureCerts'] = True
-    #
-    #     driver = webdriver.Chrome(executable_path=path_to_chrome_driver, chrome_options=options)
+    elif (browser == 'chrome_headless'):
+        path_to_chrome_driver = globaldata.CHROME_DRIVER_DIR
+        options = webdriver.ChromeOptions()
+        options.add_argument("--test-type")
+        options.add_argument("--disable-popup-blocking")
+        options.add_argument("--headless")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--ignore-certificate-errors")
+
+        options.add_argument("--disable-infobars")
+
+        if 'frontend' in site or 'admin' in site:
+            if 'beta' in browser:
+                options.binary_location = browser_path[0]
+            else:
+                options.binary_location = browser_path[1]
+
+        capabilities = DesiredCapabilities.CHROME
+        capabilities['loggingPrefs'] = {'performance': 'ALL'}
+        capabilities['acceptInsecureCerts'] = True
+
+        driver = webdriver.Chrome(executable_path=path_to_chrome_driver, chrome_options=options)
 
     elif (browser == 'firefox') or (browser == 'firefox_beta'):
         path_to_geckodriver = globaldata.FIREFOX_DRIVER_DIR
@@ -94,6 +108,12 @@ def get_driver(browser, jenkins=""):
         caps = DesiredCapabilities.FIREFOX
         path_to_geckodriver = globaldata.GECKO_DRIVER
         print('path to gecko driver = ' + path_to_geckodriver)
+
+        if 'frontend' in site or 'admin' in site:
+            if 'beta' in browser:
+                options.binary_location = browser_path[0]
+            else:
+                options.binary_location = browser_path[1]
 
         caps["marionette"] = True
         profile = webdriver.FirefoxProfile()
@@ -105,17 +125,18 @@ def get_driver(browser, jenkins=""):
         options = FirefoxOptions()
         options.add_argument('--headless')
 
+        if 'frontend' in site or 'admin' in site:
+            if 'beta' in browser:
+                options.binary_location = browser_path[0]
+            else:
+                options.binary_location = browser_path[1]
+
         caps = DesiredCapabilities.FIREFOX
         caps["marionette"] = True
         profile = webdriver.FirefoxProfile()
         profile.accept_untrusted_certs = True
         driver = webdriver.Firefox(executable_path=path_to_geckodriver, capabilities=caps, firefox_options=options, firefox_profile=profile)
 
-    elif 'frontend' in self.site or 'admin' in self.site:
-        if 'beta' in browser:
-            options.binary_location = browser_path[0]
-        else:
-            options.binary_location = browser_path[1]
     else:
         print(browser + "is not an option")
 
@@ -740,7 +761,7 @@ def os_browser_path(browser_type):
     if os_type == 'darwin':
         if 'chrome' in browser_type:
             beta_browser_path = '/Applications/Google BETA Chrome.app/Contents/MacOS/Google Chrome'
-            stable_browser_path = '/Applications/Google STABLE Chrome.app/Contents/MacOS/Google Chrome'
+            stable_browser_path = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
         elif 'firefox' in browser_type:
             beta_browser_path = '/Applications/Firefox BETA.app/Contents/MacOS/Firefox-bin'
             stable_browser_path = '/Applications/Firefox STABLE.app/Contents/MacOS/Firefox-bin'
