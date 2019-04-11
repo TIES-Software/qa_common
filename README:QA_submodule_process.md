@@ -49,6 +49,8 @@ git commit -m "message"
 
 git push origin <branch>
 
+Go make PR in Git Hub
+
 (then from project directory)
 
 git status
@@ -62,6 +64,8 @@ git add <file>
 git commit -m "message"
 
 git push origin <branch>
+
+Go make PR in Git Hub
 
 ### MORE RESCOURCES ABOUT SUBMODULES:
 
