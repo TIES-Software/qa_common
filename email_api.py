@@ -6,10 +6,13 @@ import glob
 import imaplib
 import email
 import time
-from common import (
-    globaldata,
-    commonfunctions as cf,
-)
+# from common import (
+#     globaldata,
+#     commonfunctions as cf,
+# )
+import globaldata
+import commonfunctions as cf
+
 from pageobjectsfrontend import checkout
 
 
