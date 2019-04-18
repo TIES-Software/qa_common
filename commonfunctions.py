@@ -23,7 +23,7 @@ def get_driver(browser, jenkins="", site=""):
     os_type = platform.system().lower()
     browser_path = os_browser_path(browser_type=browser)
 
-    if (browser == 'chrome') or (browser == 'chrome_headless'):
+    if 'chrome' in browser :
         path_to_chrome_driver = globaldata.CHROME_DRIVER_DIR
         options = webdriver.ChromeOptions()
         #options.add_argument("--start-maximized")
