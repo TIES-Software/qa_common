@@ -720,9 +720,19 @@ def driver_browser_info(driver):
     browser = driver.capabilities['browserName']
     print('Browser Name = ' + browser)
     if 'chrome' in browser:
-        print('Browser Version = ' + driver.capabilities['version'])
-        print('Driver Version = ' + driver.capabilities[browser]['chromedriverVersion'])
-        print('Platform = ' + driver.capabilities['platform'])
+        try:
+            print('Browser Version = ' + driver.capabilities['version'])
+            print('Driver Version = ' + driver.capabilities[browser]['chromedriverVersion'])
+            print('Platform = ' + driver.capabilities['platform'])
+        except KeyError:
+            try:
+                print('Browser Version = ' + driver.capabilities['browserVersion'])
+                print('Driver Version = ' + driver.capabilities[browser]['chromedriverVersion'])
+                print('Platform = ' + driver.capabilities['platformName'])
+            except Exception:
+                driver.quit()
+                assert False, 'Failed to get browser info, check driver.capabilities'
+
     elif 'firefox' in browser:
         print('Browser Version = ' + driver.capabilities['browserVersion'])
         print('Platform = ' + driver.capabilities['platformName'])
