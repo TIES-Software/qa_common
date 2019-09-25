@@ -51,7 +51,7 @@ def get_driver(browser, jenkins="", site=""):
         options.add_argument("--ignore-urlfetcher-cert-requests")
         options.add_argument("--ignore-ssl-errors=true")
         options.add_argument("--ssl-protocol=any")
-        options.add_argument("--window-size=1920,1080")
+        #options.add_argument("--window-size=1920,1080")
 
         if 'headless' in browser:
             options.add_argument("--headless")
@@ -357,7 +357,7 @@ def wait_for_element_and_click(self, by, locator, timeout=globaldata.TIMEOUT):
         clickable.click()
         return True
     except Exception as e:
-        print("unable to click on element" +locator, e)
+        print("unable to click on element " +locator, e)
         return False
 
 
@@ -435,7 +435,7 @@ def check_if_element_visible(self, by, locator, timeout=globaldata.TIMEOUT):
         #else:
             #print('Failed to find element visible with the locator of ' + locator)
     except Exception as e:
-        print('something went wrong trying to find element \n', e)
+        print('something went wrong trying to find element ' +locator, e)
         return False
 
 
