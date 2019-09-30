@@ -703,7 +703,7 @@ def calculate_current_school_year(self, date=get_current_date_formatted()):
         end_school_month_year = end_of_school(self) + '/' +  str(int(next_year)-1)
         return beg_school_month_year + ' - ' + end_school_month_year
 
-    elif time.strptime(date, "%m/%d/%Y") >= time.strptime(beg_school_year, "%m/%d/%Y") and time.strptime(date, "%m/%d/%Y") <= time.strptime(end_school_year, "%m/%d/%Y"):
+    elif time.strptime(beg_school_year, "%m/%d/%Y") <= time.strptime(date, "%m/%d/%Y") <= time.strptime(end_school_year, "%m/%d/%Y"):
         return beg_school_year + ' - ' + end_school_year
 
     elif time.strptime(date, "%m/%d/%Y") > time.strptime(end_school_year, "%m/%d/%Y"):
