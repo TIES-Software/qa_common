@@ -4,12 +4,12 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import TimeoutException
 import unittest
-import globaldata
+from qa_common import globaldata
 # import httplib
 import sys
 import base64
 import os
-import commonfunctions as cf
+from qa_common import commonfunctions as cf
 
 try:
     import json
