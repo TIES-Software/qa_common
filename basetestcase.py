@@ -16,7 +16,7 @@ class BaseTestCase (unittest.TestCase):
         driver = cf.get_driver(cls.base_browser, cls.jenkins, cls.base_site)
         cls.driver = driver
         cf.driver_browser_info(driver)
-        return driver
+        # return driver # RonC: why need to return?
 
     @classmethod
     def tearDownClass(cls):
@@ -40,7 +40,8 @@ class BaseTestCase (unittest.TestCase):
 
             config = {"username": sauce_username,
                       "access-key": sauce_accesskey}
-
+            # base64string = base64.encodebytes('%s:%s' % (config['username'], config['access-key']))[:-1]
+            # encodestring function even deprecated but still can use or replace by the upper line
             base64string = base64.encodestring('%s:%s' % (config['username'], config['access-key']))[:-1]
 
             if failed:
