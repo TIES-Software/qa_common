@@ -3,13 +3,13 @@ from selenium.common.exceptions import *
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
-from selenium.webdriver.chrome.options import Options
+# from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.remote.webelement import WebElement
 from qa_common import globaldata
 from qa_common import custom_EC
-
 import time
 import datetime
 import string
@@ -23,12 +23,12 @@ def get_driver(browser, jenkins="", site=""):
     os_type = platform.system().lower()
     browser_path = os_browser_path(browser_type=browser)
 
-    if 'chrome' in browser :
+    if 'chrome' in browser:
         path_to_chrome_driver = globaldata.CHROME_DRIVER_DIR
         options = webdriver.ChromeOptions()
-        #options.add_argument("--start-maximized")
-        #size of a 13 inch desktop screen
-        #options.add_argument("--window-size=1280,1500")
+        # options.add_argument("--start-maximized")
+        # size of a 13 inch desktop screen
+        # options.add_argument("--window-size=1280,1500")
         options.add_argument("--test-type")
         options.add_argument("--disable-popup-blocking")
         options.add_argument('--ignore-certificate-errors')
@@ -51,7 +51,7 @@ def get_driver(browser, jenkins="", site=""):
         options.add_argument("--ignore-urlfetcher-cert-requests")
         options.add_argument("--ignore-ssl-errors=true")
         options.add_argument("--ssl-protocol=any")
-        #options.add_argument("--window-size=1920,1080")
+        # options.add_argument("--window-size=1920,1080")
 
         if 'headless' in browser:
             options.add_argument("--headless")
@@ -68,12 +68,14 @@ def get_driver(browser, jenkins="", site=""):
             else:
                 options.binary_location = browser_path[1]
 
-        if os_type =='linux':
-            output_dir='/tmp'
+        if os_type == 'linux':
+            output_dir = '/tmp'
             service_log_path = "/tmp/chromedriver.log".format(output_dir)
-            driver = webdriver.Chrome(executable_path=path_to_chrome_driver, chrome_options=options, desired_capabilities=capabilities, service_log_path=service_log_path )
+            driver = webdriver.Chrome(executable_path=path_to_chrome_driver, chrome_options=options,
+                                      desired_capabilities=capabilities, service_log_path=service_log_path)
         else:
-            driver = webdriver.Chrome(executable_path=path_to_chrome_driver, chrome_options=options, desired_capabilities=capabilities)
+            driver = webdriver.Chrome(executable_path=path_to_chrome_driver, chrome_options=options,
+                                      desired_capabilities=capabilities)
 
     elif (browser == 'chrome_headless'):
         path_to_chrome_driver = globaldata.CHROME_DRIVER_DIR
@@ -115,7 +117,8 @@ def get_driver(browser, jenkins="", site=""):
         caps["marionette"] = True
         profile = webdriver.FirefoxProfile()
         profile.accept_untrusted_certs = True
-        driver = webdriver.Firefox(executable_path=path_to_geckodriver, capabilities=caps, firefox_options=options, firefox_profile=profile)
+        driver = webdriver.Firefox(executable_path=path_to_geckodriver, capabilities=caps, firefox_options=options,
+                                   firefox_profile=profile)
 
     elif (browser == 'firefox_headless') or (browser == 'firefox_headless_beta'):
         path_to_geckodriver = globaldata.FIREFOX_DRIVER_DIR
@@ -132,15 +135,17 @@ def get_driver(browser, jenkins="", site=""):
         caps["marionette"] = True
         profile = webdriver.FirefoxProfile()
         profile.accept_untrusted_certs = True
-        driver = webdriver.Firefox(executable_path=path_to_geckodriver, capabilities=caps, firefox_options=options, firefox_profile=profile)
+        driver = webdriver.Firefox(executable_path=path_to_geckodriver, capabilities=caps, firefox_options=options,
+                                   firefox_profile=profile)
 
     else:
         print(browser + "is not an option")
-
-    window_size = driver.get_window_size()
-    print('\nWindow size is ' + str(window_size))
-    print('\nbeta browser binary location is ' + str(browser_path[0]))
-    print('\ncurrent browser binary location is ' + str(browser_path[1]))
+        return None
+    # Too much info for console output only use for debugging
+    # window_size = driver.get_window_size()
+    # print('\nWindow size is ' + str(window_size))
+    # print('\nbeta browser binary location is ' + str(browser_path[0]))
+    # print('\ncurrent browser binary location is ' + str(browser_path[1]))
 
     return driver
 
@@ -164,7 +169,7 @@ def get_by(what):
     return by
 
 
-#def generate_id(size=8, chars=string.letters + string.digits):
+# def generate_id(size=8, chars=string.letters + string.digits):
 def generate_id(size=8, chars=string.ascii_letters + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
@@ -209,38 +214,39 @@ def get_future_date(days_in_future):
 def get_current_year():
     return '{dt.year}'.format(dt=datetime.datetime.now())
 
+
 def month_nbr(month=''):
     if month == '':
         month = '{dt.month}'.format(dt=datetime.datetime.now())
     elif month.isdigit():
         month = month
-    elif isinstance(month,str):
+    elif isinstance(month, str):
         month = month.lower()
         month_dict = {
             'jan': 1,
-            'january' : 1,
-            'feb' : 2,
-            'february' : 2,
-            'mar' : 3,
-            'march' : 3,
-            'apr' : 4,
-            'april' : 4,
-            'may' : 5,
-            'jun' : 6,
-            'june' : 6,
-            'jul' : 7,
-            'july' : 7,
-            'aug' : 8,
-            'august' : 8,
-            'sep' : 9,
-            'september' : 9,
-            'sept' : 9,
-            'oct' : 10,
-            'october' : 10,
-            'nov' : 11,
-            'november' : 11,
-            'dec' : 12,
-            'december' : 12,
+            'january': 1,
+            'feb': 2,
+            'february': 2,
+            'mar': 3,
+            'march': 3,
+            'apr': 4,
+            'april': 4,
+            'may': 5,
+            'jun': 6,
+            'june': 6,
+            'jul': 7,
+            'july': 7,
+            'aug': 8,
+            'august': 8,
+            'sep': 9,
+            'september': 9,
+            'sept': 9,
+            'oct': 10,
+            'october': 10,
+            'nov': 11,
+            'november': 11,
+            'dec': 12,
+            'december': 12,
         }
         month = int(month_dict[month])
     else:
@@ -249,17 +255,20 @@ def month_nbr(month=''):
 
     return month
 
+
 def start_date_of_month(month):
     if month == '':
         month = '{dt.month}'.format(dt=datetime.datetime.now())
     first_day = calendar.monthrange(int(get_current_year()), int(month))
     return first_day[0]
 
+
 def end_date_of_month(month):
     if month == '':
         month = '{dt.month}'.format(dt=datetime.datetime.now())
     last_day = calendar.monthrange(int(get_current_year()), int(month))
     return last_day[1]
+
 
 def get_current_time():
     return time.strftime("%H:%M:%S", time.gmtime())
@@ -269,6 +278,7 @@ def wait_for_jquery_inactive(self, script='return jQuery.active', timeout=global
     # waits until jQuery finishes executing
     poll_until(self, script, "0", timeout=globaldata.TIMEOUT)
 
+
 ######
 # Window Handle Functions
 ######
@@ -277,8 +287,8 @@ def wait_for_jquery_inactive(self, script='return jQuery.active', timeout=global
 def close_all_additional_windows(self):
     driver = self.driver
     while len(driver.window_handles) > 1:
-            driver.switch_to.window(driver.window_handles[-1])
-            driver.close()
+        driver.switch_to.window(driver.window_handles[-1])
+        driver.close()
     driver.switch_to.window(driver.window_handles[0])
 
 
@@ -319,7 +329,7 @@ def wait_for_url(self, url, timeout=globaldata.TIMEOUT):
     while (url not in current_url):
         try:
             current_url = driver.current_url
-        except Exception as e:
+        except WebDriverException as e:
             current_url = ""
             new_time = time.time()
             if new_time - last_time > timeout:
@@ -357,7 +367,7 @@ def wait_for_element_and_click(self, by, locator, timeout=globaldata.TIMEOUT):
         clickable.click()
         return True
     except Exception as e:
-        print("unable to click on element " +locator, e)
+        print("unable to click on element " + locator, e)
         return False
 
 
@@ -432,10 +442,10 @@ def check_if_element_visible(self, by, locator, timeout=globaldata.TIMEOUT):
     try:
         if wait_for_element_visible(self, by, locator, timeout):
             return True
-        #else:
-            #print('Failed to find element visible with the locator of ' + locator)
+        # else:
+        # print('Failed to find element visible with the locator of ' + locator)
     except Exception as e:
-        print('something went wrong trying to find element ' +locator, e)
+        print('something went wrong trying to find element ' + locator, e)
         return False
 
 
@@ -473,7 +483,8 @@ def wait_for_element_not_visible(self, by, locator, timeout=globaldata.TIMEOUT):
 # needed for adminBeta testing
 def wait_for_element_visible_in_iframe(self, iframe_id, by, locator, timeout=globaldata.TIMEOUT):
     driver = self.driver
-    assert wait_for_element_visible(self, globaldata.ID, iframe_id, timeout), "iframe '" + iframe_id + "' not present in page"
+    assert wait_for_element_visible(self, globaldata.ID, iframe_id,
+                                    timeout), "iframe '" + iframe_id + "' not present in page"
     driver.switch_to.frame(iframe_id)
     time.sleep(.25)
     try:
@@ -492,6 +503,7 @@ def wait_for_element_in_iframe_and_click(self, iframe_id, by, locator, timeout=g
     driver.switch_to.frame(iframe_id)
     try:
         element = wait_for_element_clickable(self, by, locator, timeout)
+        # selenium.webdriver.remote.webelement.WebElement
         if isinstance(element, webdriver.remote.webelement.WebElement):
             element.click()
             return True
@@ -506,7 +518,7 @@ def wait_for_child_element_visible(self, parent_element, by, locator, timeout=gl
     driver = self.driver
     wait = WebDriverWait(driver, timeout)
     by = get_by(by)
-    if not isinstance(parent_element,  webdriver.remote.webelement.WebElement):
+    if not isinstance(parent_element, webdriver.remote.webelement.WebElement):
         return False, '\ncommonfunctions: parent_element provided is NOT a webelement'
 
     try:
@@ -548,7 +560,7 @@ def check_script(self, script):
     driver = self.driver
     try:
         driver.execute_script(script)
-    except Exception as e:
+    except WebDriverException as e:
         return False
     return True
 
@@ -566,7 +578,7 @@ def wait_for_script_runnable(self, script, **kwargs):
         retry_interval = kwargs['retry']
     if 'timeout' in kwargs:
         timeout = kwargs['timeout']
-    while(check_script(self, script) is False):
+    while (check_script(self, script) is False):
         new_time = time.time()
         if new_time - last_time > timeout:
             passed = False
@@ -582,7 +594,7 @@ def poll_until(self, script, condition, timeout=globaldata.TIMEOUT):
     last_time = first_time
     passed = True
     try:
-        while(str(driver.execute_script(script)) != condition):
+        while (str(driver.execute_script(script)) != condition):
             new_time = time.time()
             if new_time - last_time > timeout:
                 passed = False
@@ -592,9 +604,8 @@ def poll_until(self, script, condition, timeout=globaldata.TIMEOUT):
         return False
 
 
-# TODO: Phase out this function and remove. Github issue #22
+# TODO: Phase out this function and remove. Github issue #22. The new updated one in edspring_functions
 def wait_for_element(self, by, what, **kwargs):
-
     driver = self.driver
     found = True
     timeout_param = globaldata.TIMEOUT
@@ -638,7 +649,8 @@ def wait_for_element(self, by, what, **kwargs):
 
 
 def get_checkbox_state(self, element):
-    assert isinstance(element, webdriver.remote.webelement.WebElement), 'Element for checkbox field type was not provided'
+    assert isinstance(element,
+                      webdriver.remote.webelement.WebElement), 'Element for checkbox field type was not provided'
 
     try:
         check_box_value = element.get_attribute('checked')
@@ -651,6 +663,7 @@ def get_checkbox_state(self, element):
 def set_checkbox(self, element, desired_state='checked'):
     assert isinstance(element, webdriver.remote.webelement.WebElement), 'The element provided must be a webelement'
     time.sleep(2)
+    driver = self.driver
     try:
         if get_checkbox_state(self, element=element) != desired_state:
             time.sleep(1)
@@ -678,9 +691,12 @@ def edit_field_type_select(self, element, field_name, data):
 
     try:
         Select(element.find_element_by_id(field_name)).select_by_visible_text(data)
-        select_element = wait_for_element_present(self, globaldata.CSS, 'select[id=\"' + field_name + '\"]', globaldata.TIMEOUTLONG)
-    except (NoSuchElementException, ElementNotVisibleException, StaleElementReferenceException, InvalidElementStateException):
-        print('\nData ' + data + ' is not an available selection or the select field is in an Invalid/stale element state')
+        select_element = wait_for_element_present(self, globaldata.CSS, 'select[id=\"' + field_name + '\"]',
+                                                  globaldata.TIMEOUTLONG)
+    except (
+    NoSuchElementException, ElementNotVisibleException, StaleElementReferenceException, InvalidElementStateException):
+        print(
+            '\nData ' + data + ' is not an available selection or the select field is in an Invalid/stale element state')
         return False
     return select_element.get_attribute('value')
 
@@ -692,23 +708,26 @@ def start_of_school(self):
 def end_of_school(self):
     return '06/30'
 
+
 def calculate_current_school_year(self, date=get_current_date_formatted()):
     current_year = '{dt.year}'.format(dt=datetime.datetime.now())
-    next_year = int(current_year)+1
+    next_year = int(current_year) + 1
     beg_school_year = start_of_school(self) + '/' + current_year
     end_school_year = end_of_school(self) + '/' + str(next_year)
 
     if time.strptime(date, "%m/%d/%Y") < time.strptime(beg_school_year, "%m/%d/%Y"):
-        beg_school_month_year = start_of_school(self) + '/' + str(int(current_year)-1)
-        end_school_month_year = end_of_school(self) + '/' +  str(int(next_year)-1)
+        beg_school_month_year = start_of_school(self) + '/' + str(int(current_year) - 1)
+        end_school_month_year = end_of_school(self) + '/' + str(int(next_year) - 1)
         return beg_school_month_year + ' - ' + end_school_month_year
 
-    elif time.strptime(date, "%m/%d/%Y") >= time.strptime(beg_school_year, "%m/%d/%Y") and time.strptime(date, "%m/%d/%Y") <= time.strptime(end_school_year, "%m/%d/%Y"):
+    elif time.strptime(date, "%m/%d/%Y") >= time.strptime(beg_school_year, "%m/%d/%Y") and time.strptime(date,
+                                                                                                         "%m/%d/%Y") <= time.strptime(
+            end_school_year, "%m/%d/%Y"):
         return beg_school_year + ' - ' + end_school_year
 
     elif time.strptime(date, "%m/%d/%Y") > time.strptime(end_school_year, "%m/%d/%Y"):
-        beg_school_month_year = start_of_school(self) + '/' + str(int(current_year)+1)
-        end_school_month_year = end_of_school(self) + '/' + str(int(next_year)+1)
+        beg_school_month_year = start_of_school(self) + '/' + str(int(current_year) + 1)
+        end_school_month_year = end_of_school(self) + '/' + str(int(next_year) + 1)
         return beg_school_month_year + ' - ' + end_school_month_year
 
     else:
@@ -738,7 +757,7 @@ def driver_browser_info(driver):
         print('Platform = ' + driver.capabilities['platformName'])
         # FireFox says there is no need to give us normal humans the version of the geckodriver
     else:
-        print ('\nCF: Chrome and Firefox are currently the only supported browsers')
+        print('\nCF: Chrome and Firefox are currently the only supported browsers')
 
 
 def results_grouper(how_to_group, what_to_group, fill_value=None):
@@ -755,11 +774,6 @@ def results_grouper(how_to_group, what_to_group, fill_value=None):
 def get_timestamp(self, time_format='%H:%M:%S.%f'):
     ts = time.time()
     return datetime.datetime.fromtimestamp(ts).strftime(time_format)[:-3]
-
-
-def get_current_env(self):
-    driver = self.driver
-    return fg.get_url(self.test_title)
 
 
 def os_browser_path(browser_type):
