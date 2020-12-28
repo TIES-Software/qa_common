@@ -1,16 +1,8 @@
 # -*- coding: utf-8 -*-
-from selenium import webdriver
-#from selenium.webdriver.firefox.webdriver import FirefoxBinary
-from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import TimeoutException
 import unittest
 from qa_common import globaldata
-# import httplib
-import sys
 import base64
-import os
 from qa_common import commonfunctions as cf
-
 try:
     import json
 except ImportError:
@@ -24,7 +16,7 @@ class BaseTestCase (unittest.TestCase):
         driver = cf.get_driver(cls.base_browser, cls.jenkins, cls.base_site)
         cls.driver = driver
         cf.driver_browser_info(driver)
-        return driver
+        # return driver # RonC: why need to return?
 
     @classmethod
     def tearDownClass(cls):
@@ -48,7 +40,8 @@ class BaseTestCase (unittest.TestCase):
 
             config = {"username": sauce_username,
                       "access-key": sauce_accesskey}
-
+            # base64string = base64.encodebytes('%s:%s' % (config['username'], config['access-key']))[:-1]
+            # encodestring function even deprecated but still can use or replace by the upper line
             base64string = base64.encodestring('%s:%s' % (config['username'], config['access-key']))[:-1]
 
             if failed:
@@ -59,7 +52,12 @@ class BaseTestCase (unittest.TestCase):
             print("SauceOnDemandSessionID=" + jobid + " job-name=" + self.test_title)
 
             body_content = json.dumps({"passed": passed})
-            connection =  httplib.HTTPConnection("saucelabs.com")
+            try:
+                import http.client # Python3
+                connection = http.client.HTTPConnection("saucelabs.com")
+            except ImportError:
+                import httplib   # Python2 and was rename http.client in Python3
+                connection = httplib.HTTPConnection("saucelabs.com")
             connection.request('PUT', '/rest/v1/%s/jobs/%s' % (config['username'], jobid),
                                body_content,
                                headers={"Authorization": "Basic %s" % base64string})
